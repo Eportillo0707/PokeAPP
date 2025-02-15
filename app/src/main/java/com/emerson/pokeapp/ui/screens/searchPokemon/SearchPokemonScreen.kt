@@ -1,6 +1,7 @@
 package com.emerson.pokeapp.ui.screens.searchPokemon
 
 import android.content.res.Configuration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
@@ -10,7 +11,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -18,6 +21,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -37,10 +44,7 @@ fun SearchPokemonScreen(
     navController: NavController
 ) {
     ScreenContent(
-        onQueryChanged = { query ->
-            viewModel.onSearchQueryChanged(query)
-
-        },
+        onQueryChanged = viewModel::onSearchQueryChanged,
         searchResultState = viewModel.searchResultState,
         onRetryClick = { }
     )
@@ -53,19 +57,37 @@ private fun ScreenContent(
     searchResultState: StateFlow<UiState<Flow<PagingData<PokemonItem>>>>,
     onRetryClick: () -> Unit
 ) {
+    val focusManager = LocalFocusManager.current
+    val textFieldFocusRequester = remember { FocusRequester() }
+    LaunchedEffect(Unit) {
+        textFieldFocusRequester.requestFocus() // Solicita el foco cuando se abre la pantalla
+    }
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFF77BDFE))
 
     ) {
+
         var text by remember { mutableStateOf("") }
 
         TextField(
             value = text,
-            onValueChange = { newText ->
-                text = newText
-                onQueryChanged(newText)
+            onValueChange = {
+                text = it
+                onQueryChanged(it)
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .focusRequester(textFieldFocusRequester),
+
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color.White,
+                unfocusedContainerColor = Color.White,
+                cursorColor = Color.Black,
+                focusedTextColor = Color.Black
+            )
+
         )
         PokemonList(
             searchResultState = searchResultState
@@ -103,6 +125,7 @@ private fun ColumnScope.PokemonList(
                 modifier = Modifier
                     .weight(1f)
                     .padding(horizontal = 20.dp)
+
             ) {
                 items(paginItems.itemCount) { index ->
                     val pokemon = paginItems[index]

@@ -23,7 +23,7 @@ class PokemonListPagingSource(
         val optionalQuery = if (query.isNullOrEmpty()){
             Optional.Absent
         }else{
-            Optional.Present(query)
+            Optional.Present("%$query%")
         }
 
 

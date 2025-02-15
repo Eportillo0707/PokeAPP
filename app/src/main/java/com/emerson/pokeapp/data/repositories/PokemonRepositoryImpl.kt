@@ -17,7 +17,7 @@ internal class PokemonRepositoryImpl(
 
     private val remoteDataSource: PokemonRemoteDataSource
 ) : PokemonRepository {
-    override suspend fun getPokemonList(offset: Int, query: String?): Flow<PagingData<PokemonItem>> {
+    override suspend fun getPokemonList(offset: Int, query: String): Flow<PagingData<PokemonItem>> {
         return remoteDataSource.getPokemonList(limit = 20, offset, query)
     }
 
