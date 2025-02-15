@@ -45,3 +45,14 @@ ext {
     set("coroutines_test_version", "1.6.4")
     set("turbine_version", "1.0.0")
 }
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url = uri("https://jitpack.io") }
+    }
+    dependencies {
+        classpath("com.android.tools.build:gradle:7.0.4")
+
+    }
+}

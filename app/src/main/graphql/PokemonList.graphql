@@ -1,0 +1,15 @@
+query getPokemonList($limit: Int!, $offset: Int!, $query: String) {
+    pokemon_v2_pokemon(
+        limit: $limit,
+        offset: $offset,
+        where: { name: { _ilike: $query } }
+    ) {
+        id
+        name
+        pokemon_v2_pokemontypes {
+            pokemon_v2_type {
+                name
+            }
+        }
+    }
+}

@@ -1,11 +1,10 @@
 package com.emerson.pokeapp.domain.usecases
 
 import androidx.paging.PagingData
-import com.emerson.pokeapp.data.remote.responses.PokemonListResponse
-import com.emerson.pokeapp.domain.model.Pokemon
-import com.emerson.pokeapp.repository.PokemonRepository
+import com.emerson.pokeapp.domain.model.PokemonItem
+import com.emerson.pokeapp.domain.repositories.PokemonRepository
 import kotlinx.coroutines.flow.Flow
 
 class GetPokemonListUseCase(private val repository: PokemonRepository)  {
-    operator fun invoke(): Flow<PagingData<Pokemon>> = repository.getPokemonList()
+    suspend operator fun invoke(offset: Int, query: String? = null ): Flow<PagingData<PokemonItem>> = repository.getPokemonList(offset, query)
 }
