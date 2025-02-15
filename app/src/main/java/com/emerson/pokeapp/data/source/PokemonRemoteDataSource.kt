@@ -14,15 +14,17 @@ import kotlinx.coroutines.flow.Flow
 class PokemonRemoteDataSource(
     private val apolloClient: ApolloClient,
     private val pokemonMapper: PokemonMapper
-):PokeApi {
-    override suspend fun getPokemonList(limit: Int, offset: Int, query: String?): Flow<PagingData<PokemonItem>> {
+) : PokeApi {
+    override suspend fun getPokemonList(
+        limit: Int,
+        offset: Int,
+        query: String?
+    ): Flow<PagingData<PokemonItem>> {
         return Pager(
             config = PagingConfig(pageSize = limit, prefetchDistance = 2),
-            pagingSourceFactory = {PokemonListPagingSource(apolloClient, pokemonMapper, query)}
+            pagingSourceFactory = { PokemonListPagingSource(apolloClient, pokemonMapper, query) }
         ).flow
     }
-
-
 
 
 }

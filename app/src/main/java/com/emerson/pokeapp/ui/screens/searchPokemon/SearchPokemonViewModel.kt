@@ -7,11 +7,12 @@ import com.emerson.pokeapp.domain.model.PokemonItem
 import com.emerson.pokeapp.domain.usecases.SearchPokemonUseCase
 import com.emerson.pokeapp.ui.utils.UiState
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
 class SearchPokemonViewModel(
@@ -22,20 +23,40 @@ class SearchPokemonViewModel(
 
     val searchResultState: StateFlow<UiState<Flow<PagingData<PokemonItem>>>> get() = _searchResults.asStateFlow()
 
-    // Método para manejar el cambio de búsqueda
-    fun onSearchQueryChanged(query: CharSequence) {
-        _searchResults.value = UiState.Loading // Estado de carga
+    private val searchQueryFlow = MutableStateFlow("")
 
+    init {
+        observeSearchQuery()
+    }
+
+    private fun observeSearchQuery() {
+        viewModelScope.launch {
+            searchPokemonUseCase.searchFlow
+                .debounce(500)
+                .distinctUntilChanged()
+                .collectLatest { query ->
+                    fetchPokemonList(query)
+
+                }
+        }
+    }
+
+    fun onSearchQueryChanged(query: String) {
+        searchPokemonUseCase.searchQuery(query)
+    }
+
+    private fun fetchPokemonList(query: String) {
+        _searchResults.value = UiState.Loading
         viewModelScope.launch {
             try {
-                // Llamamos al UseCase, pasamos el query y obtenemos el flujo de resultados
-                val pokemonFlow = searchPokemonUseCase.invoke(0, query.toString())
 
-                // Actualizamos el estado a los resultados sin recolectarlos aquí
+                val pokemonFlow: Flow<PagingData<PokemonItem>> =
+                    searchPokemonUseCase.invoke(0, query)
                 _searchResults.value = UiState.Result(pokemonFlow)
             } catch (e: Exception) {
                 _searchResults.value = UiState.Error
             }
         }
     }
+
 }

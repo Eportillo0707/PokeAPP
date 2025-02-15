@@ -13,11 +13,13 @@ class SearchPokemonUseCase(
         return repository.getPokemonList(offset, query)
     }
 
-    private val _searchFlow: MutableSharedFlow<CharSequence> =
+    private val _searchFlow: MutableSharedFlow<String> =
         MutableSharedFlow(extraBufferCapacity = 1)
 
-    fun searchQuery(query: CharSequence) {
+    fun searchQuery(query: String) {
         _searchFlow.tryEmit(query)
     }
+
+    val searchFlow: Flow<String> get() = _searchFlow
 
 }

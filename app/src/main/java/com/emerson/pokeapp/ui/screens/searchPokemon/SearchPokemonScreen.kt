@@ -8,8 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -22,12 +21,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.emerson.pokeapp.domain.model.PokemonItem
 import com.emerson.pokeapp.ui.components.AppError
 import com.emerson.pokeapp.ui.components.AppLoading
 import com.emerson.pokeapp.ui.components.PokemonListItem
 import com.emerson.pokeapp.ui.utils.UiState
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
 @Composable
@@ -36,7 +37,10 @@ fun SearchPokemonScreen(
     navController: NavController
 ) {
     ScreenContent(
-        onQueryChanged = { },
+        onQueryChanged = { query ->
+            viewModel.onSearchQueryChanged(query)
+
+        },
         searchResultState = viewModel.searchResultState,
         onRetryClick = { }
     )
@@ -46,7 +50,7 @@ fun SearchPokemonScreen(
 @Composable
 private fun ScreenContent(
     onQueryChanged: (String) -> Unit,
-    searchResultState: StateFlow<UiState<List<PokemonItem>>>,
+    searchResultState: StateFlow<UiState<Flow<PagingData<PokemonItem>>>>,
     onRetryClick: () -> Unit
 ) {
     Column(
@@ -57,11 +61,14 @@ private fun ScreenContent(
 
         TextField(
             value = text,
-            onValueChange = {
-                text = it
-                onQueryChanged(it)
+            onValueChange = { newText ->
+                text = newText
+                onQueryChanged(newText)
             },
             modifier = Modifier.fillMaxWidth()
+        )
+        PokemonList(
+            searchResultState = searchResultState
         )
 
 
@@ -70,7 +77,7 @@ private fun ScreenContent(
 
 @Composable
 private fun ColumnScope.PokemonList(
-    searchResultState: StateFlow<UiState<List<PokemonItem>>>,
+    searchResultState: StateFlow<UiState<Flow<PagingData<PokemonItem>>>>,
 
     ) {
     val state by searchResultState.collectAsState()
@@ -90,21 +97,20 @@ private fun ColumnScope.PokemonList(
         }
 
         is UiState.Result -> {
-            Column(
+            val paginItems = result.data.collectAsLazyPagingItems()
+
+            LazyColumn(
                 modifier = Modifier
                     .weight(1f)
-                    .verticalScroll(rememberScrollState())
                     .padding(horizontal = 20.dp)
-
             ) {
-                Spacer(modifier = Modifier.height(20.dp))
-                result.data.forEach { pokemonItem ->
-                    PokemonListItem(
-                        pokemonItem = pokemonItem,
+                items(paginItems.itemCount) { index ->
+                    val pokemon = paginItems[index]
+                    if (pokemon != null) {
+                        PokemonListItem(pokemonItem = pokemon)
+                    }
 
-                    )
                 }
-
             }
         }
 
@@ -116,19 +122,5 @@ private fun ColumnScope.PokemonList(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun ScreenPreview() {
-    ScreenContent(
-        onQueryChanged = { },
-        searchResultState = MutableStateFlow(
-            UiState.Result(
-                listOf(
-                    PokemonItem(
-                        name = "Pikachu",
-                        id = 1,
-                        pokemonTypes = listOf("Grass", "Poison")
 
-                    )
-                )
-            )
-        ),
-    ) { }
 }
