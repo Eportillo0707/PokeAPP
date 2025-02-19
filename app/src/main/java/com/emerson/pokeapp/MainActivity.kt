@@ -7,10 +7,13 @@ import androidx.compose.material3.Surface
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.emerson.pokeapp.ui.screens.pokemonInfo.PokemonInfoScreen
+import com.emerson.pokeapp.ui.screens.pokemonInfo.PokemonInfoViewModel
 import com.emerson.pokeapp.ui.screens.pokemonList.PokemonListScreen
 import com.emerson.pokeapp.ui.screens.searchPokemon.SearchPokemonScreen
 import com.emerson.pokeapp.ui.theme.PokeAppTheme
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +36,25 @@ class MainActivity : ComponentActivity() {
                                 viewModel = koinViewModel()
                             )
 
+
                         }
+                        composable("pokemonInfo/{pokemonName}") { backStackEntry ->
+                            val pokemonName = backStackEntry.arguments?.getString("pokemonName")
+                            if (pokemonName != null) {
+                                val viewModel: PokemonInfoViewModel = koinViewModel(
+                                    parameters = { parametersOf(pokemonName) }
+                                )
+                                PokemonInfoScreen(
+                                    viewModel = viewModel,
+                                    pokemonName = pokemonName,
+                                    navController = navController
+
+                                )
+                            }
+
+
+                        }
+
 
                     }
 

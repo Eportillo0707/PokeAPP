@@ -19,7 +19,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun AppLoading(
     modifier: Modifier = Modifier,
-    textColor: Color = MaterialTheme.colorScheme.onSurface
+    textColor: Color = Color.White
 ) {
     val loadingText = "Loading"
     val dots = "..."

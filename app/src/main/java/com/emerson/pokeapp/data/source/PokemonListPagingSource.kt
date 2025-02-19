@@ -18,7 +18,7 @@ class PokemonListPagingSource(
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, PokemonItem> {
         val offset = params.key ?: 0
-        val limit = 20
+        val limit = 60
 
         val optionalQuery = if (query.isNullOrEmpty()){
             Optional.Absent

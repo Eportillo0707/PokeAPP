@@ -2,12 +2,20 @@ package com.emerson.pokeapp.ui.screens.pokemonList
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -16,7 +24,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.colorspace.WhitePoint
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -34,32 +41,39 @@ import kotlinx.coroutines.flow.StateFlow
 @Composable
 fun PokemonListScreen(
     viewModel: PokemonListViewModel,
-    navController: NavController
+    navController: NavController,
+
 ) {
     ScreenContent(
         pokemonList = viewModel.pokemonItem,
-        onSearchClick = { navController.navigate("searchPokemon") }
+        onSearchClick = { navController.navigate("searchPokemon") },
+        onPokemonClick = { pokemonName ->
+            navController.navigate("pokemonInfo/$pokemonName")
+        }
 
 
     )
-
-
 }
 
 @Composable
 private fun ScreenContent(
     pokemonList: StateFlow<PagingData<PokemonItem>>,
-    onSearchClick: () -> Unit = {}
+    onSearchClick: () -> Unit,
+    onPokemonClick: (String) -> Unit
 ) {
-    Column(modifier = Modifier.fillMaxSize()
-        .background(Color(0xFF77BDFE)),
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFF121422)),
     ) {
+        Spacer(modifier = Modifier.height(10.dp))
         SearchButton(
             onSearchClick = onSearchClick
         )
-
+        Spacer(modifier = Modifier.height(10.dp))
         ListItem(
-            pokemonList = pokemonList
+            pokemonList = pokemonList,
+            onClick = onPokemonClick
         )
     }
 
@@ -69,27 +83,46 @@ private fun ScreenContent(
 private fun SearchButton(
     onSearchClick: () -> Unit
 ) {
-    Button(
-        onClick = onSearchClick,
-        colors = ButtonDefaults.elevatedButtonColors(
-            containerColor = Color.White,
-            contentColor = Color.Black
-        ),
+    Box(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .height(50.dp),
+        contentAlignment = Alignment.Center
 
     ) {
-        Text(
-            text = "Search".uppercase(),
-            style = MaterialTheme.typography.titleLarge,
+        Box(
+            modifier = Modifier
+                .width(350.dp)
+                .height(36.dp)
+                .border(0.5.dp, Color.Gray, RoundedCornerShape(12.dp)),
+        ) {
+            Button(
+                onClick = onSearchClick,
+                colors = ButtonDefaults.elevatedButtonColors(
+                    containerColor = Color(0xFF232B4C),
+                    contentColor = Color.White
+                ),
+                shape = RoundedCornerShape(12.dp),
+                contentPadding = PaddingValues(0.dp),
+                modifier = Modifier.fillMaxWidth()
 
-        )
+
+            ) {
+                Text(
+                    text = "Search",
+                    style = MaterialTheme.typography.titleMedium,
+
+                    )
+            }
+        }
+
     }
 }
 
 @Composable
 private fun ColumnScope.ListItem(
     pokemonList: StateFlow<PagingData<PokemonItem>>,
+    onClick: (String) -> Unit
 ) {
     val pokemonState = pokemonList.collectAsLazyPagingItems()
 
@@ -105,23 +138,26 @@ private fun ColumnScope.ListItem(
         }
 
         is LoadState.NotLoading -> {
-            LazyColumn(
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color(0xFF77BDFE))
-
+                    .background(Color(0xFF121422)),
+                contentPadding = PaddingValues(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
 
             ) {
-                items(
-                    count = pokemonState.itemCount,
-                    key = { index -> "pokemon_${pokemonState[index]?.name}" },
-                    contentType = { index -> "pokemon_${pokemonState[index]?.name}" }
-                ) { index ->
-                    val item = pokemonState[index] ?: return@items
+                items(pokemonState.itemCount) { index ->
+                    val pokemon = pokemonState[index]
+                    if (pokemon != null) {
+                        PokemonListItem(
+                            pokemonItem = pokemon,
+                            onCLick = {onClick(pokemon.name)}
 
-                    PokemonListItem(
-                        pokemonItem = item
-                    )
+                        )
+                    }
+
 
                 }
             }
@@ -151,7 +187,9 @@ fun ScreenPreview() {
             )
         )
         ScreenContent(
-            pokemonList = pokemonList
+            pokemonList = pokemonList,
+            onSearchClick = {},
+            onPokemonClick = {}
         )
 
     }

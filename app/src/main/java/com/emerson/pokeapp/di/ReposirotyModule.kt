@@ -12,5 +12,5 @@ val  repositoryModule = module {
     single{ApolloPokemonClient().getApolloClient()}
     single { PokemonMapper() }
     single{PokemonRemoteDataSource(get(), get()) }
-    single<PokemonRepository> { PokemonRepositoryImpl(get()) }
+    single<PokemonRepository> { PokemonRepositoryImpl( get(), get()) }
 }

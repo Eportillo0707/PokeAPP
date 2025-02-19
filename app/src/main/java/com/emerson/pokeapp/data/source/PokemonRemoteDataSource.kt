@@ -4,10 +4,12 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.apollographql.apollo3.ApolloClient
+import com.emerson.pokeapp.data.remote.GetPokemonInfoQuery
 
 import com.emerson.pokeapp.data.remote.PokeApi
 
 import com.emerson.pokeapp.data.remote.mappers.PokemonMapper
+import com.emerson.pokeapp.domain.model.PokemonInfo
 import com.emerson.pokeapp.domain.model.PokemonItem
 import kotlinx.coroutines.flow.Flow
 
@@ -24,6 +26,18 @@ class PokemonRemoteDataSource(
             config = PagingConfig(pageSize = limit, prefetchDistance = 2),
             pagingSourceFactory = { PokemonListPagingSource(apolloClient, pokemonMapper, query) }
         ).flow
+    }
+
+    override suspend fun getPokemonInfo(pokemonName: String): PokemonInfo {
+        val response = apolloClient.query(GetPokemonInfoQuery(pokemonName = pokemonName)).execute()
+        return (
+                pokemonMapper.mapToDomain(
+                    response.data?.pokemon_v2_pokemon?.firstOrNull()
+                        ?: throw Exception("Pokemon not found")
+                )
+                )
+
+
     }
 
 

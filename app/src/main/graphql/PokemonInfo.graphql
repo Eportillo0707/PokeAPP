@@ -1,0 +1,29 @@
+query getPokemonInfo($pokemonName: String!) {
+    pokemon_v2_pokemon(where: { name: { _eq: $pokemonName } }) {
+        id
+        name
+        height
+        weight
+        base_experience
+        pokemon_v2_pokemonstats {
+            base_stat
+            pokemon_v2_stat {
+                name
+            }
+        }
+        pokemon_v2_pokemontypes {
+            pokemon_v2_type {
+                name
+            }
+        }
+        pokemon_v2_pokemonspecy{
+            pokemon_v2_evolutionchain{
+                pokemon_v2_pokemonspecies{
+                    id
+                    name
+                    evolves_from_species_id
+                }
+            }
+        }
+    }
+}

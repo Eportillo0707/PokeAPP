@@ -1,17 +1,28 @@
 package com.emerson.pokeapp.ui.screens.searchPokemon
-
 import android.content.res.Configuration
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -24,9 +35,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -46,7 +58,10 @@ fun SearchPokemonScreen(
     ScreenContent(
         onQueryChanged = viewModel::onSearchQueryChanged,
         searchResultState = viewModel.searchResultState,
-        onRetryClick = { }
+        onRetryClick = { },
+        onPokemonClick = { pokemonName ->
+            navController.navigate("pokemonInfo/$pokemonName")
+        }
     )
 
 }
@@ -55,42 +70,67 @@ fun SearchPokemonScreen(
 private fun ScreenContent(
     onQueryChanged: (String) -> Unit,
     searchResultState: StateFlow<UiState<Flow<PagingData<PokemonItem>>>>,
+    onPokemonClick: (String) -> Unit,
     onRetryClick: () -> Unit
 ) {
-    val focusManager = LocalFocusManager.current
+
     val textFieldFocusRequester = remember { FocusRequester() }
     LaunchedEffect(Unit) {
-        textFieldFocusRequester.requestFocus() // Solicita el foco cuando se abre la pantalla
+        textFieldFocusRequester.requestFocus()
     }
+
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF77BDFE))
+            .background(Color(0xFF121422))
 
     ) {
-
         var text by remember { mutableStateOf("") }
+        Spacer(modifier = Modifier.height(10.dp))
 
-        TextField(
+        BasicTextField(
             value = text,
             onValueChange = {
                 text = it
                 onQueryChanged(it)
             },
             modifier = Modifier
-                .fillMaxWidth()
-                .focusRequester(textFieldFocusRequester),
+                .width(350.dp)
+                .height(36.dp)
+                .align(Alignment.CenterHorizontally)
+                .border(0.5.dp, Color.Gray, RoundedCornerShape(12.dp))
+                .background(Color(0xFF232B4C), RoundedCornerShape(12.dp))
+                .focusRequester(textFieldFocusRequester)
+                .padding(horizontal = 12.dp, vertical = 6.dp),
 
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color.White,
-                unfocusedContainerColor = Color.White,
-                cursorColor = Color.Black,
-                focusedTextColor = Color.Black
-            )
+            textStyle = TextStyle(color = Color.White, fontSize = 14.sp),
 
+            decorationBox = { innerTextField ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "Search",
+                        modifier = Modifier.size(18.dp),
+                        tint = Color.White
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Box(modifier = Modifier.weight(1f)) {
+                        if (text.isEmpty()) {
+                            Text("Search", color = Color.LightGray, fontSize = 14.sp)
+                        }
+                        innerTextField()
+                    }
+                }
+            }
         )
+        Spacer(modifier = Modifier.height(10.dp))
         PokemonList(
-            searchResultState = searchResultState
+            searchResultState = searchResultState,
+            onClick = onPokemonClick
         )
 
 
@@ -100,6 +140,7 @@ private fun ScreenContent(
 @Composable
 private fun ColumnScope.PokemonList(
     searchResultState: StateFlow<UiState<Flow<PagingData<PokemonItem>>>>,
+    onClick: (String) -> Unit
 
     ) {
     val state by searchResultState.collectAsState()
@@ -121,20 +162,25 @@ private fun ColumnScope.PokemonList(
         is UiState.Result -> {
             val paginItems = result.data.collectAsLazyPagingItems()
 
-            LazyColumn(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 20.dp)
+           LazyVerticalGrid(
+               columns = GridCells.Fixed(2),
+               modifier = Modifier
+                   .fillMaxWidth()
+                   .background(Color(0xFF121422)),
+               contentPadding = PaddingValues(8.dp),
+               verticalArrangement = Arrangement.spacedBy(8.dp),
+               horizontalArrangement = Arrangement.spacedBy(8.dp)
+           ) {
+               items(paginItems.itemCount) { index ->
+                   val pokemon = paginItems[index]
+                   if (pokemon != null) {
+                       PokemonListItem(pokemonItem = pokemon,
+                           onCLick = {onClick(pokemon.name)}
+                       )
+                   }
+               }
 
-            ) {
-                items(paginItems.itemCount) { index ->
-                    val pokemon = paginItems[index]
-                    if (pokemon != null) {
-                        PokemonListItem(pokemonItem = pokemon)
-                    }
-
-                }
-            }
+           }
         }
 
     }

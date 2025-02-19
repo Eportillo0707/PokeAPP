@@ -24,7 +24,7 @@ android {
         buildConfigField(
             "String",
             "POKEMON_IMAGE_URL",
-            "\"https://img.pokemondb.net/artwork/%s.jpg\""
+            "\"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/%d.png\""
         )
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -147,6 +147,9 @@ apollo {
         implementation("androidx.room:room-ktx:$room_version")
         //apollo
         implementation("com.apollographql.apollo3:apollo-runtime:3.7.3")
+        //AutoSizeText
+
+        implementation("androidx.compose.ui:ui:1.5.0")
 
 
     }
