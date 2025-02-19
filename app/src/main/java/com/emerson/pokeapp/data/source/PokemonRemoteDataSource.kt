@@ -5,9 +5,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.apollographql.apollo3.ApolloClient
 import com.emerson.pokeapp.data.remote.GetPokemonInfoQuery
-
 import com.emerson.pokeapp.data.remote.PokeApi
-
 import com.emerson.pokeapp.data.remote.mappers.PokemonMapper
 import com.emerson.pokeapp.domain.model.PokemonInfo
 import com.emerson.pokeapp.domain.model.PokemonItem

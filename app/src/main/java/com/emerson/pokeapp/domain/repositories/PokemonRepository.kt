@@ -10,7 +10,7 @@ interface PokemonRepository {
 
         suspend fun getPokemonList(offset: Int, query: String): Flow<PagingData<PokemonItem>>
         suspend fun getPokemonInfo(pokemonName: String): PokemonInfo
-        suspend fun getPokemonEvolution(pokemonName: String): List<List<PokemonSpecies>>
+
 
 
 
