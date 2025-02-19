@@ -15,6 +15,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,10 +35,15 @@ fun StatsBar(
     statMaxValue: Int = 255,
     modifier: Modifier = Modifier
 ) {
+    var animatedProgress by remember { mutableStateOf(0f) }
     val progress = animateFloatAsState(
-        targetValue = statValue / statMaxValue.toFloat(),
+        targetValue = animatedProgress,
         animationSpec = tween(durationMillis = 1000, easing = LinearEasing)
-    ).value
+    )
+
+    LaunchedEffect(statValue) {
+        animatedProgress = statValue / statMaxValue.toFloat()
+    }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier.fillMaxWidth()
@@ -69,7 +79,7 @@ fun StatsBar(
             Box(
                 modifier = modifier
                     .fillMaxHeight()
-                    .fillMaxWidth(progress)
+                    .fillMaxWidth(progress.value)
                     .background(Color.White, shape = RoundedCornerShape(10.dp))
             )
         }

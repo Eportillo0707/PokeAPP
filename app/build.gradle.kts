@@ -116,6 +116,7 @@ apollo {
         implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
         implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
         implementation("androidx.navigation:navigation-compose:$nav_version")
+        
 
         // Gson
         implementation("com.google.code.gson:gson:$gson_version")
@@ -149,7 +150,9 @@ apollo {
         implementation("com.apollographql.apollo3:apollo-runtime:3.7.3")
         //AutoSizeText
 
-        implementation("androidx.compose.ui:ui:1.5.0")
+        implementation("androidx.compose.ui:ui:1.6.7")
+        //nav
+
 
 
     }

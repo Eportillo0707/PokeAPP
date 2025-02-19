@@ -12,15 +12,31 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,13 +53,14 @@ import com.emerson.pokeapp.ui.components.PokemonListItem
 import com.emerson.pokeapp.ui.theme.PokeAppTheme
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 @Composable
 fun PokemonListScreen(
     viewModel: PokemonListViewModel,
     navController: NavController,
 
-) {
+    ) {
     ScreenContent(
         pokemonList = viewModel.pokemonItem,
         onSearchClick = { navController.navigate("searchPokemon") },
@@ -59,24 +76,51 @@ fun PokemonListScreen(
 private fun ScreenContent(
     pokemonList: StateFlow<PagingData<PokemonItem>>,
     onSearchClick: () -> Unit,
-    onPokemonClick: (String) -> Unit
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFF121422)),
+    onPokemonClick: (String) -> Unit,
     ) {
-        Spacer(modifier = Modifier.height(10.dp))
-        SearchButton(
-            onSearchClick = onSearchClick
-        )
-        Spacer(modifier = Modifier.height(10.dp))
-        ListItem(
-            pokemonList = pokemonList,
-            onClick = onPokemonClick
-        )
+    val listState = rememberLazyGridState()
+    val coroutineScope = rememberCoroutineScope()
+    var showButton by remember { mutableStateOf(false) }
+    LaunchedEffect(listState.firstVisibleItemIndex) {
+        showButton = listState.firstVisibleItemIndex > 0
     }
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFF121422)),
+        ) {
+            Spacer(modifier = Modifier.height(10.dp))
+            SearchButton(
+                onSearchClick = onSearchClick
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            ListItem(
+                pokemonList = pokemonList,
+                onClick = onPokemonClick,
+                listState = listState
+            )
+        }
+        if (showButton) {
+            FloatingActionButton(
+                onClick = {
+                    coroutineScope.launch {
+                        listState.animateScrollToItem(0)
+                    }
+                },
+                containerColor = Color(0xFF232B4C),
+                contentColor = Color.White,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(end = 8.dp, top = 75.dp)
 
+
+                ) {
+                Icon(Icons.Default.ArrowUpward, contentDescription = "Scroll to Top")
+            }
+        }
+
+    }
 }
 
 @Composable
@@ -122,7 +166,8 @@ private fun SearchButton(
 @Composable
 private fun ColumnScope.ListItem(
     pokemonList: StateFlow<PagingData<PokemonItem>>,
-    onClick: (String) -> Unit
+    onClick: (String) -> Unit,
+    listState: LazyGridState
 ) {
     val pokemonState = pokemonList.collectAsLazyPagingItems()
 
@@ -139,6 +184,7 @@ private fun ColumnScope.ListItem(
 
         is LoadState.NotLoading -> {
             LazyVerticalGrid(
+                state = listState,
                 columns = GridCells.Fixed(2),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -153,7 +199,7 @@ private fun ColumnScope.ListItem(
                     if (pokemon != null) {
                         PokemonListItem(
                             pokemonItem = pokemon,
-                            onCLick = {onClick(pokemon.name)}
+                            onCLick = { onClick(pokemon.name) }
 
                         )
                     }

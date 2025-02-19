@@ -6,7 +6,7 @@ plugins {
     id("com.android.application") version "8.7.3" apply false
     id("com.android.library") version "8.7.3" apply false
     id("org.jetbrains.kotlin.android") version "1.8.0" apply false
-    id("androidx.navigation.safeargs") version "2.8.6" apply false
+    id("androidx.navigation.safeargs") version "2.8.7" apply false
     id("com.google.devtools.ksp") version "1.9.0-1.0.12" apply false
 }
 
@@ -17,14 +17,14 @@ ext {
     set("versionCode", 1)
     set("versionName", "1.0")
 
-    set("nav_version", "2.7.1")
+    set("nav_version", "2.8.6")
     set("lifecycle_version", "2.6.1")
     set("room_version", "2.5.2")
     set("recycler_view_version", "1.3.1")
     set("constraint_layout_version", "2.1.4")
     set("material_version", "1.9.0")
     set("material3_compose_version", "1.1.1")
-    set("compose_version", "1.5.0")
+    set("compose_version", "1.6.7")
     set("compose_compiler_version", "1.5.14")
     set("fragment_version", "1.6.1")
     set("activity_version", "1.7.2")

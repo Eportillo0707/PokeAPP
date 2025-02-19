@@ -30,7 +30,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import coil.compose.SubcomposeAsyncImage
 import com.emerson.pokeapp.domain.model.PokemonInfo
@@ -51,8 +50,7 @@ fun PokemonInfoScreen(
     navController: NavController,
     pokemonName: String
 ) {
-    val pokemonState = viewModel.pokemonInfo.collectAsState().value
-    when (pokemonState) {
+    when (val pokemonState = viewModel.pokemonInfo.collectAsState().value) {
         is UiState.Loading -> {
             AppLoading()
         }
@@ -86,134 +84,141 @@ private fun ScreenContent(
     navController: NavController,
     modifier: Modifier = Modifier,
 ) {
+
     val typeColors = remember {
         pokemon.types.map { getPokemonTypeColor(it) }
     }
-    LazyColumn(
+    Box(
         modifier = modifier
             .fillMaxSize()
             .background(Color(0xFF121422))
     ) {
-        item {
-            Box(
-                modifier = modifier
-                    .size(450.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                TopCircle(
-                    typeColors = typeColors,
-                )
-                SubcomposeAsyncImage(
-                    model = pokemonItem.ImageUrl,
-                    contentDescription = "Pokemon Image",
-                    loading = { ImageLoading() },
-                    error = { },
-                    contentScale = ContentScale.Fit,
-                    modifier = Modifier
-                        .size(350.dp)
-                        .align(Alignment.TopCenter)
-                        .padding(top = 100.dp)
-                        .zIndex(1f)
-                )
-                Text(
-                    text = pokemonItem.name.uppercase(),
-                    color = Color.White,
-                    fontSize = 40.sp,
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 1,
-                    softWrap = false,
-                    overflow = TextOverflow.Clip,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .padding(top = 350.dp)
-                        .fillMaxWidth()
-                        .scale(0.9f)
-                )
-            }
-            Row(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight(),
-                horizontalArrangement =
-                if (pokemonItem.pokemonTypes.size == 1) Arrangement.Center
-                else Arrangement.Center
-            )
-            {
-                pokemonItem.pokemonTypes.forEach { type ->
-                    val iconId = TypeIcons[type.lowercase()]
-                    if (iconId != null) {
-                        Box(
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            Image(
-                                painter = painterResource(id = iconId),
-                                contentDescription = null,
+        LazyColumn(
+            modifier = modifier
+                .fillMaxSize()
+                .background(Color(0xFF121422))
+        ) {
+            item {
+                Box(
+                    modifier = modifier
+                        .size(450.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    TopCircle(
+                        typeColors = typeColors,
+                    )
+                    SubcomposeAsyncImage(
+                        model = pokemonItem.ImageUrl,
+                        contentDescription = "Pokemon Image",
+                        loading = { ImageLoading() },
+                        error = { },
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier
+                            .size(350.dp)
+                            .align(Alignment.TopCenter)
+                            .padding(top = 100.dp)
 
-                                modifier = modifier
-                                    .width(150.dp)
-                                    .height(60.dp)
-                                    .padding(horizontal = 10.dp)
-                            )
+                    )
+                    Text(
+                        text = pokemonItem.name.uppercase(),
+                        color = Color.White,
+                        fontSize = 40.sp,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        softWrap = false,
+                        overflow = TextOverflow.Clip,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .padding(top = 350.dp)
+                            .fillMaxWidth()
+                            .scale(0.9f)
+                    )
+                }
+                Row(
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight(),
+                    horizontalArrangement =
+                    if (pokemonItem.pokemonTypes.size == 1) Arrangement.Center
+                    else Arrangement.Center
+                )
+                {
+                    pokemonItem.pokemonTypes.forEach { type ->
+                        val iconId = TypeIcons[type.lowercase()]
+                        if (iconId != null) {
+                            Box(
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                Image(
+                                    painter = painterResource(id = iconId),
+                                    contentDescription = null,
+
+                                    modifier = modifier
+                                        .width(150.dp)
+                                        .height(60.dp)
+                                        .padding(horizontal = 10.dp)
+                                )
+                            }
                         }
                     }
                 }
-            }
 
-            Row(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        text = "Height",
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 15.sp,
+                Row(
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            text = "Height",
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 15.sp,
                         )
-                    Spacer(modifier = modifier.height(4.dp))
-                    Text(
-                        text = "${pokemon.height / 10f} m",
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 30.sp,
+                        Spacer(modifier = modifier.height(4.dp))
+                        Text(
+                            text = "${pokemon.height / 10f} m",
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 30.sp,
+                        )
+                    }
+                    Spacer(modifier = modifier.width(30.dp))
+                    Box(
+                        modifier = Modifier
+                            .height(60.dp)
+                            .width(1.dp)
+                            .background(Color.White)
                     )
+                    Spacer(modifier = modifier.width(30.dp))
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            text = "Weight",
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 15.sp,
+                        )
+                        Spacer(modifier = modifier.height(4.dp))
+                        Text(
+                            text = "${pokemon.weight / 10f} kg",
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 30.sp,
+                        )
+                    }
                 }
-                Spacer(modifier = modifier.width(30.dp))
-                Box(
-                    modifier = Modifier
-                        .height(60.dp)
-                        .width(1.dp)
-                        .background(Color.White)
+            }
+            item {
+
+                Stats(pokemon = pokemon)
+            }
+            item {
+                EvolutionChain(
+                    pokemon = pokemon,
+                    navController = navController
                 )
-                Spacer(modifier = modifier.width(30.dp))
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        text = "Weight",
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 15.sp,
-                        )
-                    Spacer(modifier = modifier.height(4.dp))
-                    Text(
-                        text = "${pokemon.weight / 10f} kg",
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 30.sp,
-                    )
-                }
             }
-        }
-        item {
-
-            Stats(pokemon = pokemon)
-        }
-        item {
-            EvolutionChain(
-                pokemon = pokemon,
-                navController = navController
-            )
         }
     }
 }
