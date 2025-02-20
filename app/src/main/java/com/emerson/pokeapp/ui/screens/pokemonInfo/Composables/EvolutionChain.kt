@@ -1,4 +1,4 @@
-package com.emerson.pokeapp.ui.components
+package com.emerson.pokeapp.ui.screens.pokemonInfo.Composables
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -22,7 +22,7 @@ import androidx.navigation.NavController
 import coil.compose.SubcomposeAsyncImage
 import com.emerson.pokeapp.BuildConfig
 import com.emerson.pokeapp.domain.model.PokemonInfo
-import com.emerson.pokeapp.domain.model.PokemonItem
+import com.emerson.pokeapp.ui.screens.pokemonList.Composables.ImageLoading
 
 @Composable
 fun EvolutionChain(

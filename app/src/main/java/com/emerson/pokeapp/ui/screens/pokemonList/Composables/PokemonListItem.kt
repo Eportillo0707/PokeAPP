@@ -1,4 +1,4 @@
-package com.emerson.pokeapp.ui.components
+package com.emerson.pokeapp.ui.screens.pokemonList.Composables
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.Image

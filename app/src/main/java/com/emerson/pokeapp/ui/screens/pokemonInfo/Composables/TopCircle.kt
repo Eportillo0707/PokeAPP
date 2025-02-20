@@ -1,4 +1,4 @@
-package com.emerson.pokeapp.ui.components
+package com.emerson.pokeapp.ui.screens.pokemonInfo.Composables
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
