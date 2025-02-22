@@ -14,10 +14,12 @@ class PokeApp : Application() {
         startKoin {
             androidContext(androidContext = applicationContext)
             modules(
+
                 viewModels,
                 usecases,
                 repositoryModule,
-                remoteModule
+                remoteModule,
+
             )
         }
     }

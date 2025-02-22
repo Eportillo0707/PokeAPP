@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 
 @Composable
 fun TopCircle(
@@ -26,7 +27,9 @@ fun TopCircle(
         modifier = modifier
             .fillMaxSize()
             .background(Color(0xFF121422))
+            .zIndex(0f)
     ) {
+
         Canvas(
             modifier = Modifier
                 .size(300.dp)

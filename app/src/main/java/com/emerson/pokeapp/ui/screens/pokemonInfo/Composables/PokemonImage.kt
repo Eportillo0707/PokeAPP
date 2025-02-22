@@ -34,7 +34,8 @@ import com.emerson.pokeapp.ui.screens.pokemonList.Composables.ImageLoading
             modifier = Modifier
                 .size(350.dp)
                 .align(Alignment.TopCenter)
-                .padding(top = 100.dp)
+                .padding(top = 20.dp)
+
 
         )
         Text(

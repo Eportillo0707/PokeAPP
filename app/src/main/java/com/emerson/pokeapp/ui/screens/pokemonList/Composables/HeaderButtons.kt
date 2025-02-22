@@ -37,7 +37,7 @@ fun HeaderButtons(
 
         ) {
             Box(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.fillMaxWidth()
                     .height(32.dp)
                     .border(0.5.dp, Color.Gray, RoundedCornerShape(12.dp))
             ) {
@@ -60,30 +60,7 @@ fun HeaderButtons(
                         )
                 }
             }
-            Box(
-                modifier = Modifier.weight(1f)
-                    .height(32.dp)
-                    .border(0.5.dp, Color.Gray, RoundedCornerShape(12.dp))
-            ) {
-                Button(
-                    onClick = {},
-                    colors = ButtonDefaults.elevatedButtonColors(
-                        containerColor = Color(0xFF232B4C),
-                        contentColor = Color.White
-                    ),
-                    shape = RoundedCornerShape(12.dp),
-                    contentPadding = PaddingValues(0.dp),
-                    modifier = Modifier.fillMaxWidth()
 
-
-                ) {
-                    Text(
-                        text = "Favorites",
-                        style = MaterialTheme.typography.titleMedium,
-
-                        )
-                }
-            }
 
         }
     }

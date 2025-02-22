@@ -1,4 +1,5 @@
 package com.emerson.pokeapp.ui.screens.pokemonInfo
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -12,15 +13,20 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import com.emerson.pokeapp.domain.model.PokemonInfo
 import com.emerson.pokeapp.domain.model.PokemonItem
@@ -29,10 +35,11 @@ import com.emerson.pokeapp.domain.model.getPokemonTypeColor
 import com.emerson.pokeapp.ui.components.AppError
 import com.emerson.pokeapp.ui.components.AppLoading
 import com.emerson.pokeapp.ui.screens.pokemonInfo.Composables.EvolutionChain
-import com.emerson.pokeapp.ui.screens.pokemonInfo.Composables.Stats
-import com.emerson.pokeapp.ui.screens.pokemonInfo.Composables.TopCircle
+import com.emerson.pokeapp.ui.screens.pokemonInfo.Composables.FavoriteButton
 import com.emerson.pokeapp.ui.screens.pokemonInfo.Composables.PokemonImage
 import com.emerson.pokeapp.ui.screens.pokemonInfo.Composables.PokemonSpecs
+import com.emerson.pokeapp.ui.screens.pokemonInfo.Composables.Stats
+import com.emerson.pokeapp.ui.screens.pokemonInfo.Composables.TopCircle
 import com.emerson.pokeapp.ui.utils.UiState
 
 @Composable
@@ -41,7 +48,8 @@ fun PokemonInfoScreen(
     navController: NavController,
     pokemonName: String
 ) {
-    when (val pokemonState = viewModel.pokemonInfo.collectAsState().value) {
+    val pokemonState = viewModel.pokemonInfo.collectAsState()
+    when (val state = pokemonState.value) {
         is UiState.Loading -> {
             AppLoading()
         }
@@ -51,10 +59,18 @@ fun PokemonInfoScreen(
         }
 
         is UiState.Result -> {
-            val pokemon = pokemonState.data
-            LaunchedEffect(pokemonName) {
-
+            val pokemon = state.data
+            val pokemonItem = remember {
+                mutableStateOf(
+                    PokemonItem(
+                        name = pokemon.name,
+                        id = pokemon.id,
+                        pokemonTypes = pokemon.types,
+                        isFavored = pokemon.isFavored
+                    )
+                )
             }
+
             ScreenContent(
                 pokemon = pokemon,
                 navController = navController,
@@ -63,6 +79,10 @@ fun PokemonInfoScreen(
                     id = pokemon.id,
                     pokemonTypes = pokemon.types
                 ),
+                onFavoriteClick = {
+                    viewModel.onFavoriteButtonClicked()
+
+                }
             )
         }
     }
@@ -74,6 +94,7 @@ private fun ScreenContent(
     pokemonItem: PokemonItem,
     navController: NavController,
     modifier: Modifier = Modifier,
+    onFavoriteClick: () -> Unit = {}
 ) {
 
     val typeColors = remember {
@@ -83,30 +104,44 @@ private fun ScreenContent(
         modifier = modifier
             .fillMaxSize()
             .background(Color(0xFF121422))
-            .padding(bottom = 25.dp)
+
     ) {
+
+
         LazyColumn(
             modifier = modifier
                 .fillMaxSize()
                 .background(Color(0xFF121422))
         ) {
+
             item {
+
                 Box(
                     modifier = modifier
-                        .size(550.dp),
-                    contentAlignment = Alignment.Center
+                        .align(Alignment.Center)
+
                 ) {
+
                     TopCircle(
                         typeColors = typeColors,
                     )
+                    FavoriteButton(
+                        icon = if (pokemonItem.isFavored) Icons.Filled.Star else Icons.Outlined.StarBorder,
+                        isSelected = pokemon.isFavored,
+                        onCLick = onFavoriteClick,
+
+                    )
+
+
                     PokemonImage(
                         pokemonItem = pokemonItem
                     )
+                }
                     Row(
                         modifier = modifier
                             .fillMaxWidth()
                             .wrapContentHeight()
-                            .padding(top = 445.dp),
+                            .padding(top = 10.dp),
                         horizontalArrangement =
                         if (pokemonItem.pokemonTypes.size == 1) Arrangement.Center
                         else Arrangement.Center
@@ -131,7 +166,12 @@ private fun ScreenContent(
                             }
                         }
                     }
-                }
+
+            }
+
+
+            item {
+
                 PokemonSpecs(
                     pokemon = pokemon,
                 )
@@ -145,7 +185,15 @@ private fun ScreenContent(
                     pokemon = pokemon,
                     navController = navController
                 )
+
             }
+
+
         }
+
+
+
     }
+
+
 }

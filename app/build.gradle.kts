@@ -1,5 +1,6 @@
 
 plugins {
+    id("kotlin-kapt")
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("androidx.navigation.safeargs.kotlin")
@@ -146,6 +147,8 @@ apollo {
         val room_version: String by rootProject.extra
         implementation("androidx.room:room-runtime:$room_version")
         implementation("androidx.room:room-ktx:$room_version")
+        kapt("androidx.room:room-compiler:$room_version")
+
         //apollo
         implementation("com.apollographql.apollo3:apollo-runtime:3.7.3")
         //AutoSizeText

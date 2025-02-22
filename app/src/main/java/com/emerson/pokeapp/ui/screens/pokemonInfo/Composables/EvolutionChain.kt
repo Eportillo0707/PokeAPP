@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -54,6 +55,8 @@ fun EvolutionChain(
                     items(filterEvolutionLine) { evolution ->
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier
+                                .padding(bottom = 20.dp)
                         ) {
                             SubcomposeAsyncImage(
                                 model = String.format(

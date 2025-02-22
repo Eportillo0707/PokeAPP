@@ -19,7 +19,7 @@ ext {
 
     set("nav_version", "2.8.6")
     set("lifecycle_version", "2.6.1")
-    set("room_version", "2.5.2")
+    set("room_version", "2.6.1")
     set("recycler_view_version", "1.3.1")
     set("constraint_layout_version", "2.1.4")
     set("material_version", "1.9.0")

@@ -6,7 +6,8 @@ import com.emerson.pokeapp.R
 data class PokemonItem(
     val id: Int,
     val name: String,
-    val pokemonTypes: List<String>
+    val pokemonTypes: List<String>,
+    var isFavored: Boolean = false
 ) {
     val ImageUrl: String
         get() = String.format(BuildConfig.POKEMON_IMAGE_URL, id)
