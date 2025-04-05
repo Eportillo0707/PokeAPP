@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.paging.PagingData
 import com.emerson.pokeapp.domain.model.PokemonItem
-import com.emerson.pokeapp.ui.screens.searchPokemon.Composables.PokemonList
+import com.emerson.pokeapp.ui.screens.searchPokemon.composables.PokemonList
 import com.emerson.pokeapp.ui.utils.UiState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow

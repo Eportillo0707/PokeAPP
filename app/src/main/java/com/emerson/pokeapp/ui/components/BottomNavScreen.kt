@@ -8,8 +8,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 sealed class BottomNavScreen(
     val route: String,
     val title: String,
-    val icon: ImageVector,
+
 ){
-    data object PokemonList: BottomNavScreen("pokemonList", "", Icons.Default.Home)
-    data object Favorites: BottomNavScreen("favorites", "", Icons.Default.Star)
+    data object PokemonList: BottomNavScreen("pokemonList", "Pokedex")
+    data object Favorites: BottomNavScreen("favorites", "Favorites")
 }

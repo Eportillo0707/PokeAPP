@@ -13,10 +13,15 @@ internal class FavoriteEntity (
     @ColumnInfo(name = "name")
     val name: String,
 
+    @ColumnInfo(name = "pokemon_types")
+    val pokemonTypes: List<String>
+
 ){
     constructor(pokemonItem: PokemonItem) : this(
         id = pokemonItem.id,
-        name = pokemonItem.name
+        name = pokemonItem.name,
+        pokemonTypes = pokemonItem.pokemonTypes
+
     )
 
 }

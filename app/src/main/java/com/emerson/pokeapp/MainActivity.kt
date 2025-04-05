@@ -3,6 +3,9 @@ package com.emerson.pokeapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
@@ -35,12 +38,16 @@ class MainActivity : ComponentActivity() {
             ) { paddingValues ->
                 NavHost(
                     navController = navController,
+
                     startDestination = BottomNavScreen.PokemonList.route,
-                    Modifier.padding(paddingValues)
+                                        Modifier.padding(paddingValues)
 
                 ) {
                     composable(
-                        route = BottomNavScreen.PokemonList.route
+                        route = BottomNavScreen.PokemonList.route,
+                        enterTransition = { fadeIn(animationSpec = tween(300))},
+                        popEnterTransition = { fadeIn( animationSpec = tween(300)) },
+
                     ) {
                         PokemonListScreen(
                             navController = navController,
@@ -49,6 +56,9 @@ class MainActivity : ComponentActivity() {
                     }
                     composable(
                         route = BottomNavScreen.Favorites.route,
+                        enterTransition = { fadeIn( animationSpec = tween(300))},
+                        popEnterTransition = { fadeIn( animationSpec = tween(300)) },
+
                     ){
                         FavoritesPokemonScreen(
                             viewModel = koinViewModel(),
@@ -59,6 +69,9 @@ class MainActivity : ComponentActivity() {
 
                     composable(
                         route = "pokemonInfo/{pokemonName}",
+                        enterTransition = { fadeIn(animationSpec = tween(300))},
+                        popEnterTransition = { fadeIn( animationSpec = tween(300)) },
+
                         arguments = listOf(navArgument("pokemonName") {
                             type = NavType.StringType
                         }),
@@ -70,12 +83,13 @@ class MainActivity : ComponentActivity() {
                         }
                         PokemonInfoScreen(
                             viewModel = viewModel,
-                            navController = navController,
-                            pokemonName = pokemonName
+                            navController = navController
                         )
                     }
                     composable(
                         route = "searchPokemon",
+                        enterTransition = { fadeIn(animationSpec = tween(300))},
+                        popEnterTransition = { fadeIn(animationSpec = tween(300)) },
 
                         ) {
                         SearchPokemonScreen(

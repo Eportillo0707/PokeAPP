@@ -12,8 +12,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.emerson.pokeapp.ui.theme.PokeAppTheme
+import com.emerson.pokeapp.ui.theme.montserratFamily
 import kotlinx.coroutines.delay
 
 @Composable
@@ -38,9 +40,11 @@ fun AppLoading(
 
     Text(
         text = text,
-        style = MaterialTheme.typography.bodyMedium,
+        fontFamily = montserratFamily,
+        fontWeight = FontWeight.Bold,
         color = textColor,
         modifier = modifier
+
     )
 }
 

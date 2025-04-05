@@ -24,13 +24,15 @@ internal class PokemonRepositoryImpl(
     }
 
     override fun getFavoritePokemon(): Flow<List<PokemonItem>> = pokemonDao.getAllFavorites()
-        .map { items -> items.map { PokemonItem(it.id, it.name , emptyList()) } }
+        .map { items -> items.map { PokemonItem(it.id, it.name, it.pokemonTypes) } }
 
     override suspend fun insertFavorite(pokemonItem: PokemonItem) =
+
         pokemonDao.insertFavorite(FavoriteEntity(pokemonItem))
 
+
     override suspend fun deleteFavorite(pokemonItem: PokemonItem) {
-       pokemonDao.deleteFavorite(FavoriteEntity(pokemonItem))
+        pokemonDao.deleteFavorite(FavoriteEntity(pokemonItem))
     }
 }
 
