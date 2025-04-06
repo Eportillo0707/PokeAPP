@@ -1,33 +1,23 @@
 package com.emerson.pokeapp.ui.screens.pokemonInfo
 
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.BarChart
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.StarBorder
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -35,7 +25,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -51,16 +40,12 @@ import com.emerson.pokeapp.domain.model.TypeIcons
 import com.emerson.pokeapp.domain.model.getPokemonTypeColor
 import com.emerson.pokeapp.ui.components.AppError
 import com.emerson.pokeapp.ui.components.AppLoading
-import com.emerson.pokeapp.ui.screens.pokemonInfo.composables.EvolutionChain
 import com.emerson.pokeapp.ui.screens.pokemonInfo.composables.FavoriteButton
+import com.emerson.pokeapp.ui.screens.pokemonInfo.composables.HorizontalAnimation
 import com.emerson.pokeapp.ui.screens.pokemonInfo.composables.PokemonImage
-import com.emerson.pokeapp.ui.screens.pokemonInfo.composables.PokemonSpecs
-import com.emerson.pokeapp.ui.screens.pokemonInfo.composables.Stats
 import com.emerson.pokeapp.ui.screens.pokemonInfo.composables.TopCircle
-import com.emerson.pokeapp.ui.screens.pokemonInfo.composables.TypesDetails
 import com.emerson.pokeapp.ui.theme.montserratFamily
 import com.emerson.pokeapp.ui.utils.UiState
-import kotlinx.coroutines.launch
 
 @Composable
 fun PokemonInfoScreen(
@@ -122,8 +107,7 @@ private fun ScreenContent(
     modifier: Modifier = Modifier,
     onFavoriteClick: () -> Unit = {}
 ) {
-    val pagerState = rememberPagerState(initialPage = 0, pageCount = { 2 })
-    val coroutineScope = rememberCoroutineScope()
+
     val typeColors = remember { pokemon.types.map { getPokemonTypeColor(it) } }
     val lazyListState = rememberLazyListState()
     LaunchedEffect(pokemon.id) {
@@ -224,77 +208,11 @@ private fun ScreenContent(
 
                 }
                 item {
-                    Spacer(modifier = Modifier.height(15.dp))
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceAround,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        IconButton(
-                            onClick = { coroutineScope.launch { pagerState.animateScrollToPage(0) } }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Info,
-                                contentDescription = "Info",
-                                tint = Color.White,
-                                modifier = Modifier.size(40.dp)
-                            )
-                        }
-                        IconButton(
-                            onClick = { coroutineScope.launch { pagerState.animateScrollToPage(1) } }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.BarChart,
-                                contentDescription = "Stats",
-                                tint = Color.White,
-                                modifier = Modifier.size(40.dp)
-                            )
-                        }
-                    }
-
-                    HorizontalPager(
-                        state = pagerState,
-                        beyondViewportPageCount = 1,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 10.dp)
-                            .animateContentSize()
-                            .height(700.dp)
-
-
-                    ) { page ->
-                        Card(
-                            shape = RoundedCornerShape(20.dp),
-                            colors = CardDefaults.cardColors(containerColor = Color(0xFF202339)),
-                            elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
-                            border = CardDefaults.outlinedCardBorder(),
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(horizontal = 10.dp, vertical = 10.dp)) {
-                            when (page) {
-                                0 -> Column(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .animateContentSize()
-                                ) {
-                                    PokemonSpecs(pokemon = pokemon)
-                                    Spacer(modifier = Modifier.height(30.dp))
-                                    EvolutionChain(pokemon = pokemon, navController = navController)
-                                }
-
-                                1 -> Column(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .animateContentSize()
-
-                                ) {
-                                    Stats(pokemon = pokemon)
-                                    TypesDetails(resistances = resistances)
-                                }
-                            }
-                        }
-
-
-                    }
+                    HorizontalAnimation(
+                        resistances = resistances,
+                        pokemon = pokemon,
+                        navController = navController
+                    )
 
                 }
 
