@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -36,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.emerson.pokeapp.domain.model.PokemonInfo
 import com.emerson.pokeapp.domain.model.PokemonItem
+import com.emerson.pokeapp.domain.model.TypeEffectiveness
 import com.emerson.pokeapp.domain.model.TypeIcons
 import com.emerson.pokeapp.domain.model.getPokemonTypeColor
 import com.emerson.pokeapp.ui.components.AppError
@@ -56,6 +58,7 @@ fun PokemonInfoScreen(
 
     ) {
     val pokemonState = viewModel.pokemonInfo.collectAsState()
+    val resistances = viewModel.resistances.collectAsState()
     when (val state = pokemonState.value) {
         is UiState.Loading -> {
             Box(
@@ -85,6 +88,7 @@ fun PokemonInfoScreen(
 
             ScreenContent(
                 pokemon = pokemon,
+                resistances = resistances.value,
                 navController = navController,
                 pokemonItem = PokemonItem(
                     name = pokemon.name,
@@ -103,13 +107,14 @@ fun PokemonInfoScreen(
 @Composable
 private fun ScreenContent(
     pokemon: PokemonInfo,
+    resistances: TypeEffectiveness,
     pokemonItem: PokemonItem,
     navController: NavController,
     modifier: Modifier = Modifier,
     onFavoriteClick: () -> Unit = {}
 ) {
 
-    val typeColors = remember { pokemon.types.map { getPokemonTypeColor(it) }  }
+    val typeColors = remember { pokemon.types.map { getPokemonTypeColor(it) } }
     val lazyListState = rememberLazyListState()
     LaunchedEffect(pokemon.id) {
         lazyListState.animateScrollToItem(0)
@@ -216,10 +221,118 @@ private fun ScreenContent(
                     PokemonSpecs(
                         pokemon = pokemon,
                     )
+
                 }
                 item {
 
                     Stats(pokemon = pokemon)
+                }
+                item {
+
+                    if (resistances.resistantTo.isNotEmpty()) {
+                        Column(
+                            modifier = modifier
+                                .padding(start = 20.dp, end = 20.dp, top = 10.dp)
+                        ) {
+                            Text(
+                                text = "Resistances",
+                                color = Color.White,
+                                fontFamily = montserratFamily,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 20.sp,
+                            )
+
+                            LazyRow(
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalAlignment = Alignment.CenterVertically
+
+                            ) {
+                                items(resistances.resistantTo.size) { index ->
+                                    val type = resistances.resistantTo[index]
+                                    TypeIcons[type.lowercase()]?.let { iconId ->
+                                        Image(
+                                            painter = painterResource(id = iconId),
+                                            contentDescription = null,
+                                            modifier = modifier
+                                                .width(100.dp)
+                                                .height(30.dp)
+                                        )
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                    if (resistances.weakTo.isNotEmpty()) {
+                        Column(
+                            modifier = modifier
+                                .padding(start = 20.dp, end = 20.dp, top = 10.dp)
+                        ) {
+                            Text(
+                                text = "Weaknesses",
+                                color = Color.White,
+                                fontFamily = montserratFamily,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 20.sp,
+                            )
+
+                            LazyRow(
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalAlignment = Alignment.CenterVertically
+
+                            ) {
+                                items(resistances.weakTo.size) { index ->
+                                    val type = resistances.weakTo[index]
+                                    TypeIcons[type.lowercase()]?.let { iconId ->
+                                        Image(
+                                            painter = painterResource(id = iconId),
+                                            contentDescription = null,
+                                            modifier = modifier
+                                                .width(100.dp)
+                                                .height(30.dp)
+                                        )
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                    if (resistances.immuneTo.isNotEmpty()) {
+                        Column(
+                            modifier = modifier
+                                .padding(start = 20.dp, end = 20.dp, top = 10.dp)
+                        ) {
+                            Text(
+                                text = "Immunities",
+                                color = Color.White,
+                                fontFamily = montserratFamily,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 20.sp
+                            )
+
+                            LazyRow (
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = modifier
+
+
+                            ) {
+                                items(resistances.immuneTo.size) { index ->
+                                    val type = resistances.immuneTo[index]
+                                    TypeIcons[type.lowercase()]?.let { iconId ->
+                                        Image(
+                                            painter = painterResource(id = iconId),
+                                            contentDescription = null,
+                                            modifier = modifier
+                                                .width(100.dp)
+                                                .height(30.dp)
+                                        )
+                                    }
+                                }
+                            }
+
+                        }
+                    }
                 }
                 item {
                     EvolutionChain(

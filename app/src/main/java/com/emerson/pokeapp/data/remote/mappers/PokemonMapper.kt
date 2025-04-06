@@ -28,6 +28,11 @@ class PokemonMapper {
             PokemonStat(name, it.base_stat)
 
         }
+
+        val types = pokemon.pokemon_v2_pokemontypes.mapNotNull {
+            it.pokemon_v2_type?.name
+        }
+
         val evolutionChain = pokemon.pokemon_v2_pokemonspecy
             ?.pokemon_v2_evolutionchain
             ?.pokemon_v2_pokemonspecies
@@ -37,7 +42,10 @@ class PokemonMapper {
                     name = it.name,
                     evolvesFromSpeciesId = it.evolves_from_species_id
                 )
-            } ?.let { listOf(it) }
+            }?.let { listOf(it) }
+
+
+
         return PokemonInfo(
             id = pokemon.id,
             name = pokemon.name,
@@ -45,8 +53,8 @@ class PokemonMapper {
             weight = pokemon.weight ?: 0,
             baseExperience = pokemon.base_experience ?: 0,
             stats = stats,
-            types = pokemon.pokemon_v2_pokemontypes.mapNotNull { it.pokemon_v2_type?.name },
-            evolutionChain = evolutionChain ?: emptyList()
+            types = types,
+            evolutionChain = evolutionChain ?: emptyList(),
         )
     }
 

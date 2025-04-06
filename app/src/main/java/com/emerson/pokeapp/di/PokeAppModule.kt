@@ -5,6 +5,7 @@ import com.emerson.pokeapp.domain.usecases.GetFavoritePokemonUseCase
 import com.emerson.pokeapp.domain.usecases.GetPokemonInfoUseCase
 import com.emerson.pokeapp.domain.usecases.GetPokemonListUseCase
 import com.emerson.pokeapp.domain.usecases.SearchPokemonUseCase
+import com.emerson.pokeapp.domain.usecases.TypeCalculatorUseCase
 import com.emerson.pokeapp.domain.usecases.UpdateFavoritePokemonUseCase
 import com.emerson.pokeapp.ui.screens.favoritesPokemon.FavoritesPokemonViewModel
 import com.emerson.pokeapp.ui.screens.pokemonInfo.PokemonInfoViewModel
@@ -22,12 +23,14 @@ val viewModels =
                 getPokemonInfoUseCase = get<GetPokemonInfoUseCase>(),
                 pokemonName = pokemonName,
                 updateFavoritePokemonUseCase = get<UpdateFavoritePokemonUseCase>(),
+                typeCalculatorUseCase = get<TypeCalculatorUseCase>()
 
 
             )
         }
         viewModel {
-            FavoritesPokemonViewModel(getFavoritePokemonUseCase = get<GetFavoritePokemonUseCase>())}
+            FavoritesPokemonViewModel(getFavoritePokemonUseCase = get<GetFavoritePokemonUseCase>())
+        }
 
     }
 
@@ -37,5 +40,7 @@ val usecases = module {
     factory { GetPokemonInfoUseCase(pokemonRepository = get<PokemonRepository>()) }
     factory { GetFavoritePokemonUseCase(pokemonRepository = get<PokemonRepository>()) }
     factory { UpdateFavoritePokemonUseCase(pokemonRepository = get<PokemonRepository>()) }
+    factory { TypeCalculatorUseCase() }
+
 
 }

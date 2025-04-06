@@ -14,7 +14,6 @@ data class PokemonInfo(
     var isFavored: Boolean = false
 
 
-
 )
 
 data class PokemonSpecies(

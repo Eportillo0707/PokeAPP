@@ -34,6 +34,7 @@ internal class PokemonRepositoryImpl(
     override suspend fun deleteFavorite(pokemonItem: PokemonItem) {
         pokemonDao.deleteFavorite(FavoriteEntity(pokemonItem))
     }
+
 }
 
 

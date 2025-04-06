@@ -60,7 +60,7 @@ fun StatsBar(
                 fontFamily = montserratFamily,
                 fontSize = 14.sp,
                 modifier = Modifier.weight(1f)
-                    .padding(horizontal = 40.dp)
+                    .padding(horizontal = 15.dp)
             )
             Text(
                 text = "$statValue",
@@ -68,7 +68,7 @@ fun StatsBar(
                 fontWeight = FontWeight.Bold,
                 fontFamily = montserratFamily,
                 fontSize = 15.sp,
-                modifier = Modifier.padding(end = 50.dp)
+                modifier = Modifier.padding(end = 20.dp)
             )
 
         }
@@ -76,7 +76,7 @@ fun StatsBar(
         Box(
             modifier = modifier
                 .height(10.dp)
-                .fillMaxWidth(0.8f)
+                .fillMaxWidth(0.95f)
                 .background(Color.Gray.copy(alpha = 0.3f), shape = RoundedCornerShape(10.dp))
         ) {
             Box(
