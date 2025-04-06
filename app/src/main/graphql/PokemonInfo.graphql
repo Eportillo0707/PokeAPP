@@ -1,10 +1,19 @@
 query getPokemonInfo($pokemonName: String!) {
-    pokemon_v2_pokemon(where: { name: { _eq: $pokemonName } }) {
+    pokemon_v2_pokemon(where: {name: {_eq: $pokemonName}}) {
         id
         name
         height
         weight
         base_experience
+        pokemon_v2_pokemonabilities {
+            pokemon_v2_ability {
+                name
+                pokemon_v2_abilityflavortexts(where:{language_id:{_eq:9}},limit:1){
+                    flavor_text
+
+                }
+            }
+        }
         pokemon_v2_pokemonstats {
             base_stat
             pokemon_v2_stat {
@@ -16,9 +25,9 @@ query getPokemonInfo($pokemonName: String!) {
                 name
             }
         }
-        pokemon_v2_pokemonspecy{
-            pokemon_v2_evolutionchain{
-                pokemon_v2_pokemonspecies{
+        pokemon_v2_pokemonspecy {
+            pokemon_v2_evolutionchain {
+                pokemon_v2_pokemonspecies {
                     id
                     name
                     evolves_from_species_id

@@ -38,14 +38,16 @@ fun EvolutionChain(
             .filter { it.id != pokemon.id }
         if (filterEvolutionLine.isNotEmpty()) {
             Column(
-                modifier = modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(start = 12.dp)
+
             ) {
                 Text(
-                    text = "Evolutions",
+                    text = "Evolution Chain",
                     color = Color.White,
                     fontFamily = montserratFamily,
-                    fontSize = 40.sp,
+                    fontSize = 25.sp,
                     fontWeight = FontWeight.Bold,
                     maxLines = 1,
                     softWrap = false,
@@ -81,7 +83,7 @@ fun EvolutionChain(
                             Text(
                                 text = evolution.name.replaceFirstChar { it.uppercase() },
                                 color = Color.White,
-                                fontSize = 25.sp,
+                                fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold,
                                 fontFamily = montserratFamily,
                                 maxLines = 1,

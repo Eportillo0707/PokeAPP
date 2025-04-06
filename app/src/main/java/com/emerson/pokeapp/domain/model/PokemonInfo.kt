@@ -11,9 +11,12 @@ data class PokemonInfo(
     val stats: List<PokemonStat>,
     val types: List<String>,
     val evolutionChain: List<List<PokemonSpecies>>,
+    val abilities: List<PokemonAbility>,
     var isFavored: Boolean = false
-
-
+)
+data class PokemonAbility(
+    val name: String,
+    val flavorText: String
 )
 
 data class PokemonSpecies(
@@ -25,8 +28,7 @@ data class PokemonSpecies(
 data class PokemonStat(
     val name: String?,
     val baseStat: Int,
-    val maxStatValue: Int = 255,
-
+    val maxStatValue: Int = 255
     )
 
 fun getPokemonTypeColor(type: String?): Color {

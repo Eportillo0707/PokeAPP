@@ -2,6 +2,7 @@ package com.emerson.pokeapp.data.remote.mappers
 
 import com.emerson.pokeapp.data.remote.GetPokemonInfoQuery
 import com.emerson.pokeapp.data.remote.GetPokemonListQuery
+import com.emerson.pokeapp.domain.model.PokemonAbility
 import com.emerson.pokeapp.domain.model.PokemonInfo
 import com.emerson.pokeapp.domain.model.PokemonItem
 import com.emerson.pokeapp.domain.model.PokemonSpecies
@@ -44,6 +45,12 @@ class PokemonMapper {
                 )
             }?.let { listOf(it) }
 
+        val abilities = pokemon.pokemon_v2_pokemonabilities.mapNotNull {
+            val name = it.pokemon_v2_ability?.name ?: return@mapNotNull null
+            val flavorText = it.pokemon_v2_ability.pokemon_v2_abilityflavortexts.firstOrNull()?.flavor_text ?: return@mapNotNull null
+            PokemonAbility(name, flavorText)
+        }
+
 
 
         return PokemonInfo(
@@ -55,6 +62,7 @@ class PokemonMapper {
             stats = stats,
             types = types,
             evolutionChain = evolutionChain ?: emptyList(),
+            abilities = abilities
         )
     }
 

@@ -76,7 +76,7 @@ fun StatsBar(
         Box(
             modifier = modifier
                 .height(10.dp)
-                .fillMaxWidth(0.95f)
+                .fillMaxWidth(0.98f)
                 .background(Color.Gray.copy(alpha = 0.3f), shape = RoundedCornerShape(10.dp))
         ) {
             Box(
@@ -97,7 +97,7 @@ fun Stats(pokemon: PokemonInfo){
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(start = 15.dp, end = 15.dp, top = 20.dp, bottom = 20.dp)
     ){
         pokemon.stats.forEach{ stat ->
             StatsBar(statName = stat.name ?:"Unknown", statValue = stat.baseStat)

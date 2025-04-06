@@ -112,6 +112,7 @@ apollo {
         implementation(libs.firebase.appdistribution.gradle)
         implementation(libs.androidx.ui.text.google.fonts)
         debugImplementation("androidx.compose.ui:ui-tooling:$compose_version")
+        implementation("androidx.compose.foundation:foundation:1.5.0")
 
         // Navigation
         implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
