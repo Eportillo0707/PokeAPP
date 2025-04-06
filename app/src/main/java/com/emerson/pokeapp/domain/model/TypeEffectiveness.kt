@@ -1,9 +1,12 @@
 package com.emerson.pokeapp.domain.model
 
 data class TypeEffectiveness(
+    val veryWeakTo: List<String> = emptyList(),
     val weakTo: List<String> = emptyList(),
     val resistantTo: List<String> = emptyList(),
+    val veryResistantTo: List<String> = emptyList(),
     val immuneTo: List<String> = emptyList()
+
 
 )
  val defenseMultipliers: Map<String, Map<String, Double>> = mapOf(

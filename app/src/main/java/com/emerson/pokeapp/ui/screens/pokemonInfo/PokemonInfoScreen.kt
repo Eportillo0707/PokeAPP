@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -48,6 +49,7 @@ import com.emerson.pokeapp.ui.screens.pokemonInfo.composables.PokemonImage
 import com.emerson.pokeapp.ui.screens.pokemonInfo.composables.PokemonSpecs
 import com.emerson.pokeapp.ui.screens.pokemonInfo.composables.Stats
 import com.emerson.pokeapp.ui.screens.pokemonInfo.composables.TopCircle
+import com.emerson.pokeapp.ui.screens.pokemonInfo.composables.TypesDetails
 import com.emerson.pokeapp.ui.theme.montserratFamily
 import com.emerson.pokeapp.ui.utils.UiState
 
@@ -215,7 +217,6 @@ private fun ScreenContent(
 
                 }
 
-
                 item {
 
                     PokemonSpecs(
@@ -228,111 +229,10 @@ private fun ScreenContent(
                     Stats(pokemon = pokemon)
                 }
                 item {
-
-                    if (resistances.resistantTo.isNotEmpty()) {
-                        Column(
-                            modifier = modifier
-                                .padding(start = 20.dp, end = 20.dp, top = 10.dp)
-                        ) {
-                            Text(
-                                text = "Resistances",
-                                color = Color.White,
-                                fontFamily = montserratFamily,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 20.sp,
-                            )
-
-                            LazyRow(
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                verticalAlignment = Alignment.CenterVertically
-
-                            ) {
-                                items(resistances.resistantTo.size) { index ->
-                                    val type = resistances.resistantTo[index]
-                                    TypeIcons[type.lowercase()]?.let { iconId ->
-                                        Image(
-                                            painter = painterResource(id = iconId),
-                                            contentDescription = null,
-                                            modifier = modifier
-                                                .width(100.dp)
-                                                .height(30.dp)
-                                        )
-                                    }
-                                }
-                            }
-
-                        }
-                    }
-                    if (resistances.weakTo.isNotEmpty()) {
-                        Column(
-                            modifier = modifier
-                                .padding(start = 20.dp, end = 20.dp, top = 10.dp)
-                        ) {
-                            Text(
-                                text = "Weaknesses",
-                                color = Color.White,
-                                fontFamily = montserratFamily,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 20.sp,
-                            )
-
-                            LazyRow(
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                verticalAlignment = Alignment.CenterVertically
-
-                            ) {
-                                items(resistances.weakTo.size) { index ->
-                                    val type = resistances.weakTo[index]
-                                    TypeIcons[type.lowercase()]?.let { iconId ->
-                                        Image(
-                                            painter = painterResource(id = iconId),
-                                            contentDescription = null,
-                                            modifier = modifier
-                                                .width(100.dp)
-                                                .height(30.dp)
-                                        )
-                                    }
-                                }
-                            }
-
-                        }
-                    }
-                    if (resistances.immuneTo.isNotEmpty()) {
-                        Column(
-                            modifier = modifier
-                                .padding(start = 20.dp, end = 20.dp, top = 10.dp)
-                        ) {
-                            Text(
-                                text = "Immunities",
-                                color = Color.White,
-                                fontFamily = montserratFamily,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 20.sp
-                            )
-
-                            LazyRow (
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = modifier
-
-
-                            ) {
-                                items(resistances.immuneTo.size) { index ->
-                                    val type = resistances.immuneTo[index]
-                                    TypeIcons[type.lowercase()]?.let { iconId ->
-                                        Image(
-                                            painter = painterResource(id = iconId),
-                                            contentDescription = null,
-                                            modifier = modifier
-                                                .width(100.dp)
-                                                .height(30.dp)
-                                        )
-                                    }
-                                }
-                            }
-
-                        }
-                    }
+                    TypesDetails(
+                        resistances = resistances,
+                        modifier = modifier
+                    )
                 }
                 item {
                     EvolutionChain(
@@ -341,8 +241,6 @@ private fun ScreenContent(
                     )
 
                 }
-
-
             }
         }
     }
