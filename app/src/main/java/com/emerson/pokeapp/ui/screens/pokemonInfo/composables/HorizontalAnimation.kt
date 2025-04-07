@@ -1,7 +1,8 @@
 package com.emerson.pokeapp.ui.screens.pokemonInfo.composables
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,10 +12,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -25,11 +26,13 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.emerson.pokeapp.domain.model.PokemonInfo
@@ -42,9 +45,26 @@ fun HorizontalAnimation(
     pokemon: PokemonInfo,
     navController: NavController
 
-    ){
+) {
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { 2 })
     val coroutineScope = rememberCoroutineScope()
+
+    val indicatorWidth = 50.dp
+
+    val indicatorOffset = remember { Animatable(0f) }
+    LaunchedEffect(pagerState.currentPage) {
+        val targetOffset = when (pagerState.currentPage) {
+            0 -> 0f
+            1 -> 450f
+            else -> 0f
+        }
+        indicatorOffset.animateTo(
+            targetValue = targetOffset,
+            animationSpec = tween(durationMillis = 150)
+        )
+    }
+
+
     Spacer(modifier = Modifier.height(15.dp))
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -58,7 +78,7 @@ fun HorizontalAnimation(
 
         ) {
             IconButton(
-                onClick = { coroutineScope.launch { pagerState.animateScrollToPage(0) } }
+                onClick = { coroutineScope.launch { pagerState.scrollToPage(0) } }
             ) {
                 Icon(
                     imageVector = Icons.Default.Info,
@@ -68,7 +88,7 @@ fun HorizontalAnimation(
                 )
             }
             IconButton(
-                onClick = { coroutineScope.launch { pagerState.animateScrollToPage(1) } }
+                onClick = { coroutineScope.launch { pagerState.scrollToPage(1) } }
             ) {
                 Icon(
                     imageVector = Icons.Default.BarChart,
@@ -84,35 +104,21 @@ fun HorizontalAnimation(
                 .height(3.dp)
                 .padding(horizontal = 85.dp)
         ) {
-            val indicatorWidth = 60.dp
-            val animatedOffset by animateDpAsState(
-                targetValue = when (pagerState.currentPage) {
-                    0 -> 0.dp
-                    1 -> 160.dp
-                    else -> 0.dp
-                },
-                label = "indicator_animation"
-            )
             Box(
                 modifier = Modifier
-                    .offset(x = animatedOffset)
-                    .width(indicatorWidth)
-                    .height(3.dp)
+                    .size(width = indicatorWidth, height = 3.dp)
+                    .graphicsLayer { translationX = indicatorOffset.value }
                     .background(Color.White, shape = RoundedCornerShape(50))
             )
         }
     }
 
-    androidx.compose.foundation.pager.HorizontalPager(
+    HorizontalPager(
         state = pagerState,
         beyondViewportPageCount = 1,
         modifier = Modifier
-            .fillMaxWidth()
             .padding(top = 10.dp)
-            .animateContentSize()
-            .height(700.dp)
-
-
+            .height(720.dp)
     ) { page ->
         Card(
             shape = RoundedCornerShape(20.dp),
@@ -125,9 +131,7 @@ fun HorizontalAnimation(
         ) {
             when (page) {
                 0 -> Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .animateContentSize()
+
                 ) {
                     PokemonSpecs(pokemon = pokemon)
                     Spacer(modifier = Modifier.height(30.dp))
@@ -135,9 +139,6 @@ fun HorizontalAnimation(
                 }
 
                 1 -> Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .animateContentSize()
 
                 ) {
                     Stats(pokemon = pokemon)

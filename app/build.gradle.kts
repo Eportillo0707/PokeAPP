@@ -102,6 +102,10 @@ apollo {
         implementation("com.google.android.material:material:$material_version")
         implementation("androidx.constraintlayout:constraintlayout:$constraint_layout_version")
         implementation("androidx.recyclerview:recyclerview:$recycler_view_version")
+        implementation("com.google.accompanist:accompanist-flowlayout:0.34.0")
+
+
+
 
         // Compose UI
         implementation("androidx.compose.material:material-icons-core:$material3_compose_version")

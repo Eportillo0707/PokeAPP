@@ -48,8 +48,22 @@ class PokemonMapper {
         val abilities = pokemon.pokemon_v2_pokemonabilities.mapNotNull {
             val name = it.pokemon_v2_ability?.name ?: return@mapNotNull null
             val flavorText = it.pokemon_v2_ability.pokemon_v2_abilityflavortexts.firstOrNull()?.flavor_text ?: return@mapNotNull null
-            PokemonAbility(name, flavorText)
+            val cleanedFlavorText = flavorText
+                .replace("\n", " ")
+                .replace("\u000C", " ")
+                .replace(Regex("\\s+"), " ")
+                .trim()
+            PokemonAbility(name, cleanedFlavorText)
         }
+
+        val description = pokemon.pokemon_v2_pokemonspecy
+            ?.pokemon_v2_pokemonspeciesflavortexts
+            ?.firstOrNull()
+            ?.flavor_text
+            ?.replace("\n"," ")
+            ?.replace("\u000c", " ")
+            ?.replace(Regex("\\s+"), " ")
+            ?.trim()
 
 
 
@@ -62,7 +76,8 @@ class PokemonMapper {
             stats = stats,
             types = types,
             evolutionChain = evolutionChain ?: emptyList(),
-            abilities = abilities
+            abilities = abilities,
+            description = description ?: ""
         )
     }
 

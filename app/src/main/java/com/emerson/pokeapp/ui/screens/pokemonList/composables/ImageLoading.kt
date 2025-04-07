@@ -13,7 +13,7 @@ fun ImageLoading() {
         modifier = Modifier
             .fillMaxSize()
             .background(
-                color = Color(0xFF202339)
+                color = Color.Transparent
             )
     )
 }

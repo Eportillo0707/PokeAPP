@@ -12,6 +12,7 @@ data class PokemonInfo(
     val types: List<String>,
     val evolutionChain: List<List<PokemonSpecies>>,
     val abilities: List<PokemonAbility>,
+    val description: String,
     var isFavored: Boolean = false
 )
 data class PokemonAbility(

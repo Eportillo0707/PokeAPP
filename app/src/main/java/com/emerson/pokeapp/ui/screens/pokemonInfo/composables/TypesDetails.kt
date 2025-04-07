@@ -3,6 +3,8 @@ package com.emerson.pokeapp.ui.screens.pokemonInfo.composables
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -21,6 +23,7 @@ import com.emerson.pokeapp.domain.model.TypeEffectiveness
 import com.emerson.pokeapp.domain.model.TypeIcons
 import com.emerson.pokeapp.ui.theme.montserratFamily
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun TypesDetails(
     resistances: TypeEffectiveness,
@@ -46,13 +49,11 @@ fun TypesDetails(
                 fontSize = 15.sp
             )
 
-            LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(resistances.resistantTo.size) { index ->
-                    val type = resistances.resistantTo[index]
+                resistances.resistantTo.forEach {  type ->
+
                     TypeIcons[type.lowercase()]?.let { iconId ->
                         Image(
                             painter = painterResource(id = iconId),
@@ -63,6 +64,7 @@ fun TypesDetails(
                         )
                     }
                 }
+
             }
         }
 
@@ -74,13 +76,14 @@ fun TypesDetails(
                 fontWeight = FontWeight.Bold,
                 fontSize = 15.sp
             )
-            LazyRow(
+            FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
+
+
 
             ) {
-                items(resistances.veryResistantTo.size) { index ->
-                    val type = resistances.veryResistantTo[index]
+                resistances.veryResistantTo.forEach { type ->
+
                     TypeIcons[type.lowercase()]?.let { iconId ->
                         Image(
                             painter = painterResource(id = iconId),
@@ -148,12 +151,11 @@ fun TypesDetails(
                     fontWeight = FontWeight.Bold,
                     fontSize = 15.sp,
                 )
-                LazyRow(
+                FlowRow (
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    items(resistances.veryWeakTo.size) { index ->
-                        val type = resistances.veryWeakTo[index]
+                    resistances.veryWeakTo.forEach { type ->
+
                         TypeIcons[type.lowercase()]?.let { iconId ->
                             Image(
                                 painter = painterResource(id = iconId),
@@ -175,13 +177,11 @@ fun TypesDetails(
                 fontSize = 15.sp,
             )
 
-            LazyRow(
+            FlowRow (
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-
             ) {
-                items(resistances.weakTo.size) { index ->
-                    val type = resistances.weakTo[index]
+                resistances.weakTo.forEach { type ->
+
                     TypeIcons[type.lowercase()]?.let { iconId ->
                         Image(
                             painter = painterResource(id = iconId),
@@ -192,6 +192,7 @@ fun TypesDetails(
                         )
                     }
                 }
+
             }
 
         }

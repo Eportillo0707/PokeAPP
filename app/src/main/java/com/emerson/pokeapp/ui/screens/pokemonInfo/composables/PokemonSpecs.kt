@@ -4,6 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,7 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,14 +34,12 @@ import com.emerson.pokeapp.domain.model.PokemonAbility
 import com.emerson.pokeapp.domain.model.PokemonInfo
 import com.emerson.pokeapp.ui.theme.montserratFamily
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun PokemonSpecs(
     pokemon: PokemonInfo,
     modifier: Modifier = Modifier
 ) {
-    val scope = rememberCoroutineScope()
-
     val bottomSheetState = rememberModalBottomSheetState()
     var showBottomSheet by remember { mutableStateOf(false) }
     var selectedAbility by remember { mutableStateOf<PokemonAbility?>(null) }
@@ -71,9 +70,9 @@ fun PokemonSpecs(
                     text = selectedAbility!!.flavorText,
                     color = Color.White,
                     fontFamily = montserratFamily,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.Normal,
                     fontSize = 15.sp,
-                    textAlign = TextAlign.Start,
+                    textAlign = TextAlign.Justify,
                     modifier = Modifier
                         .padding(bottom = 15.dp)
 
@@ -81,6 +80,33 @@ fun PokemonSpecs(
             }
         }
 
+    }
+
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(top = 25.dp, start = 12.dp, end = 12.dp),
+        horizontalAlignment = Alignment.Start
+    ) {
+        Text(
+            text = "Description",
+            color = Color.White,
+            fontFamily = montserratFamily,
+            fontWeight = FontWeight.Bold,
+            fontSize = 25.sp,
+        )
+        Text(
+            text = pokemon.description,
+            color = Color.White,
+            fontFamily = montserratFamily,
+            fontWeight = FontWeight.Normal,
+            fontSize = 18.sp,
+            textAlign = TextAlign.Justify,
+            lineHeight = 25.sp,
+            modifier = Modifier
+                .fillMaxWidth()
+        )
+        Spacer(modifier = modifier.height(30.dp))
     }
 
     Row(
@@ -144,7 +170,7 @@ fun PokemonSpecs(
             fontWeight = FontWeight.Bold,
             fontSize = 25.sp,
         )
-        Row(
+        FlowRow(
             horizontalArrangement = Arrangement.spacedBy(5.dp),
             modifier = modifier
                 .fillMaxWidth()
@@ -166,6 +192,7 @@ fun PokemonSpecs(
                         color = Color.White,
                         fontFamily = montserratFamily,
                         fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
                         fontSize = 15.sp,
                     )
                 }
