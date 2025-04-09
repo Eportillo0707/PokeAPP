@@ -38,6 +38,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun PokemonListScreen(
     viewModel: PokemonListViewModel,
+    modifier: Modifier = Modifier,
     navController: NavController,
 
     ) {

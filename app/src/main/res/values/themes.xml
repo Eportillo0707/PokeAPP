@@ -2,4 +2,12 @@
 <resources>
 
     <style name="Theme.PokeApp" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.PokeApp.Splash" parent="Theme.SplashScreen">
+        <!-- Background de la splash screen -->
+        <item name="windowSplashScreenBackground">@drawable/splash_screen_background</item>
+        <!-- Duración mínima del ícono en pantalla -->
+        <item name="postSplashScreenTheme">@style/Theme.PokeApp</item>
+    </style>
+
 </resources>

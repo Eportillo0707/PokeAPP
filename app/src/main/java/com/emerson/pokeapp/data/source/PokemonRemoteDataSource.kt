@@ -4,6 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.apollographql.apollo3.ApolloClient
+import com.emerson.pokeapp.data.remote.GetPokemonByTypeQuery
 import com.emerson.pokeapp.data.remote.GetPokemonInfoQuery
 import com.emerson.pokeapp.data.remote.PokeApi
 import com.emerson.pokeapp.data.remote.mappers.PokemonMapper
@@ -38,5 +39,24 @@ class PokemonRemoteDataSource(
 
     }
 
+    suspend fun getPokemonByType(type: String): List<PokemonItem> {
+        val response = apolloClient.query(GetPokemonByTypeQuery(type)).execute()
+
+        val list = response.data?.pokemon_v2_pokemontype?.let { pokemontype ->
+            pokemontype.mapNotNull {
+                it.pokemon_v2_pokemon?.let { pokemon ->
+                    pokemonMapper.mapFilter(pokemon)
+                }
+            }
+        } ?: emptyList()
+
+        return list
+
+    }
 
 }
+
+
+
+
+

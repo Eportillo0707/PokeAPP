@@ -17,5 +17,7 @@ interface PokemonRepository {
 
     suspend fun deleteFavorite(pokemonItem: PokemonItem)
 
+    suspend fun getPokemonByType(type: String): List<PokemonItem>
+
 
 }

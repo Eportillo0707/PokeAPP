@@ -34,6 +34,9 @@ internal class PokemonRepositoryImpl(
     override suspend fun deleteFavorite(pokemonItem: PokemonItem) {
         pokemonDao.deleteFavorite(FavoriteEntity(pokemonItem))
     }
+    override suspend fun getPokemonByType(type: String): List<PokemonItem> {
+        return remoteDataSource.getPokemonByType(type)
+    }
 
 }
 

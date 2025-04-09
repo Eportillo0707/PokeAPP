@@ -1,6 +1,10 @@
 package com.emerson.pokeapp.ui.components
 
 import android.content.res.Configuration
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -10,10 +14,12 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.emerson.pokeapp.ui.theme.PokeAppTheme
 import com.emerson.pokeapp.ui.theme.montserratFamily
 import kotlinx.coroutines.delay
@@ -21,31 +27,21 @@ import kotlinx.coroutines.delay
 @Composable
 fun AppLoading(
     modifier: Modifier = Modifier,
-    textColor: Color = Color.White
+    backgroundColor: Color = Color(0xFF121422),
+    indicatorColor: Color = Color.White
 ) {
-    val loadingText = "Loading"
-    val dots = "..."
-
-    var text by remember { mutableStateOf(loadingText) }
-    var updates by remember { mutableIntStateOf(0) }
-
-    LaunchedEffect(key1 = Unit) {
-        while (true) {
-            delay(500)
-            updates++
-            text = loadingText + dots.take(updates % 4)
-        }
-
-    }
-
-    Text(
-        text = text,
-        fontFamily = montserratFamily,
-        fontWeight = FontWeight.Bold,
-        color = textColor,
+    Box(
+        contentAlignment = Alignment.Center,
         modifier = modifier
+            .fillMaxSize()
+            .background(backgroundColor)
 
-    )
+    ) {
+        CircularProgressIndicator(
+            color = indicatorColor,
+            strokeWidth = 5.dp
+        )
+    }
 }
 
 @Preview(showBackground = true)

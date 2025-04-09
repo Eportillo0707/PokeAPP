@@ -37,6 +37,7 @@ fun FavoritesPokemonScreen(
 
     viewModel: FavoritesPokemonViewModel,
     navController: NavController,
+    modifier: Modifier = Modifier
 
     ) {
     var favoritesPokemon by remember { mutableStateOf<List<PokemonItem>>(emptyList()) }

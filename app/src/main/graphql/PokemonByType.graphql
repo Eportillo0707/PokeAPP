@@ -1,0 +1,15 @@
+query getPokemonByType($type: String!) {
+    pokemon_v2_pokemontype(
+        where: { pokemon_v2_type: { name: { _eq: $type } } }
+    ) {
+        pokemon_v2_pokemon {
+            id
+            name
+            pokemon_v2_pokemontypes {
+                pokemon_v2_type {
+                    name
+                }
+            }
+        }
+    }
+}

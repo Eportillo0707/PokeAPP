@@ -1,4 +1,5 @@
 package com.emerson.pokeapp.ui.screens.searchPokemon
+
 import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -35,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.paging.PagingData
 import com.emerson.pokeapp.domain.model.PokemonItem
+import com.emerson.pokeapp.ui.screens.pokemonList.composables.FilterButton
 import com.emerson.pokeapp.ui.screens.searchPokemon.composables.PokemonList
 import com.emerson.pokeapp.ui.utils.UiState
 import kotlinx.coroutines.flow.Flow
@@ -46,6 +48,7 @@ fun SearchPokemonScreen(
     navController: NavController
 ) {
     ScreenContent(
+        navController = navController,
         onQueryChanged = viewModel::onSearchQueryChanged,
         searchResultState = viewModel.searchResultState,
 
@@ -61,8 +64,9 @@ private fun ScreenContent(
     onQueryChanged: (String) -> Unit,
     searchResultState: StateFlow<UiState<Flow<PagingData<PokemonItem>>>>,
     onPokemonClick: (String) -> Unit,
+    navController: NavController
 
-) {
+    ) {
 
     val textFieldFocusRequester = remember { FocusRequester() }
     LaunchedEffect(Unit) {
@@ -113,6 +117,11 @@ private fun ScreenContent(
                         }
                         innerTextField()
                     }
+                    FilterButton(
+                        onTypeSelected = { type ->
+                            navController.navigate("pokemonListByType/$type")
+                        }
+                    )
                 }
             }
         )

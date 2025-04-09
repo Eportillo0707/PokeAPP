@@ -32,3 +32,24 @@ val TypeIcons = mapOf(
     "steel" to R.drawable.steelsv,
     "flying" to R.drawable.flyingsv
 )
+
+val PokemonTypes = listOf(
+    "fire" to R.drawable.fire,
+    "water" to R.drawable.water,
+    "grass" to R.drawable.grass,
+    "electric" to R.drawable.electric,
+    "psychic" to R.drawable.psychic,
+    "ice" to R.drawable.ice,
+    "dragon" to R.drawable.dragon,
+    "dark" to R.drawable.dark,
+    "fairy" to R.drawable.fairy,
+    "fighting" to R.drawable.fighting,
+    "poison" to R.drawable.poison,
+    "ground" to R.drawable.ground,
+    "flying" to R.drawable.flying,
+    "normal" to R.drawable.normal,
+    "bug" to R.drawable.bug,
+    "rock" to R.drawable.rock,
+    "ghost" to R.drawable.ghost,
+    "steel" to R.drawable.steel
+)
