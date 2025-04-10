@@ -106,7 +106,7 @@ fun PokemonSpecs(
             modifier = Modifier
                 .fillMaxWidth()
         )
-        Spacer(modifier = modifier.height(30.dp))
+        Spacer(modifier = modifier.height(20.dp))
     }
 
     Row(
@@ -156,7 +156,7 @@ fun PokemonSpecs(
             )
         }
     }
-    Spacer(modifier = modifier.height(30.dp))
+    Spacer(modifier = modifier.height(20.dp))
     Column(
         modifier = modifier
             .fillMaxWidth()

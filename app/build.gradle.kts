@@ -104,7 +104,7 @@ apollo {
         implementation("androidx.recyclerview:recyclerview:$recycler_view_version")
         implementation("com.google.accompanist:accompanist-flowlayout:0.34.0")
         implementation("com.google.accompanist:accompanist-systemuicontroller:0.32.0")
-        implementation("androidx.core:core-splashscreen:1.0.0")
+        implementation("androidx.core:core-splashscreen:1.0.1")
 
 
 

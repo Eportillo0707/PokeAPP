@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 
 class PokemonListByTypeViewModel(
     private val getPokemonByTypeUseCase: GetPokemonByTypeUseCase,
-    private val type: String
+    val type: String
 
 ): ViewModel() {
     private val _pokemonList = MutableStateFlow<UiState<List<PokemonItem>>>(UiState.Loading)

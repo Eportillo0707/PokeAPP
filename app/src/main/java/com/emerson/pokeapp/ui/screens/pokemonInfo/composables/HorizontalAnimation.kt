@@ -134,7 +134,7 @@ fun HorizontalAnimation(
 
                 ) {
                     PokemonSpecs(pokemon = pokemon)
-                    Spacer(modifier = Modifier.height(30.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
                     EvolutionChain(pokemon = pokemon, navController = navController)
                 }
 

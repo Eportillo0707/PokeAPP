@@ -19,7 +19,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.emerson.pokeapp.ui.components.BottomNavScreen
 import com.emerson.pokeapp.ui.components.BottomNavigationBar
-import com.emerson.pokeapp.ui.components.SplashScreen
 import com.emerson.pokeapp.ui.screens.favoritesPokemon.FavoritesPokemonScreen
 import com.emerson.pokeapp.ui.screens.pokemonInfo.PokemonInfoScreen
 import com.emerson.pokeapp.ui.screens.pokemonInfo.PokemonInfoViewModel
@@ -41,7 +40,7 @@ class MainActivity : ComponentActivity() {
         splashScreen.setKeepOnScreenCondition { keepSplash }
 
         lifecycleScope.launch {
-            delay(0)
+            delay(1000)
             keepSplash = false
         }
         setContent {
@@ -56,105 +55,104 @@ class MainActivity : ComponentActivity() {
                     darkIcons = false
                 )
             }
-            NavHost(
-                navController = navController,
-                startDestination = "splashScreen"
-            ) {
-                composable("splashScreen") {
-                    SplashScreen(navController = navController, context = this@MainActivity)
+
+            Scaffold(
+                bottomBar = {
+                    BottomNavigationBar(navController = navController)
                 }
+            ) { paddingValues ->
+                NavHost(
+                    navController = navController,
+                    startDestination = BottomNavScreen.PokemonList.route,
+                    modifier = Modifier.padding(paddingValues)
 
-                composable(
-                    route = BottomNavScreen.PokemonList.route,
-                    enterTransition = { fadeIn(animationSpec = tween(300)) },
-                    popEnterTransition = { fadeIn(animationSpec = tween(300)) },
-
+                ) {
+                    composable(
+                        route = BottomNavScreen.PokemonList.route,
+                        enterTransition = {
+                            fadeIn(animationSpec = tween(300))
+                        },
+                        popEnterTransition = { fadeIn(animationSpec = tween(300)) },
                     ) {
-                    Scaffold(
-                        bottomBar = {
-                            BottomNavigationBar(navController = navController)
-                        }
-                    ) { paddingValues ->
                         PokemonListScreen(
                             navController = navController,
-                            viewModel = koinViewModel(),
-                            modifier = Modifier.padding(paddingValues)
+                            viewModel = koinViewModel()
                         )
+
                     }
-                }
-
-                composable(
-                    route = BottomNavScreen.Favorites.route,
-                    enterTransition = { fadeIn(animationSpec = tween(300)) },
-                    popEnterTransition = { fadeIn(animationSpec = tween(300)) },
-
+                    composable(
+                        route = BottomNavScreen.Favorites.route,
+                        enterTransition = {
+                            fadeIn(animationSpec = tween(300))
+                        },
+                        popEnterTransition = { fadeIn(animationSpec = tween(300)) },
                     ) {
-                    Scaffold() { paddingValues ->
-
                         FavoritesPokemonScreen(
-                            viewModel = koinViewModel(),
                             navController = navController,
-                            modifier = Modifier.padding(paddingValues)
+                            viewModel = koinViewModel()
                         )
                     }
-
-                }
-
-
-
-
-                composable(
-                    route = "pokemonInfo/{pokemonName}",
-                    enterTransition = { fadeIn(animationSpec = tween(300)) },
-                    popEnterTransition = { fadeIn(animationSpec = tween(300)) },
-
-                    arguments = listOf(navArgument("pokemonName") {
-                        type = NavType.StringType
-                    }),
-                ) { backStackEntry ->
-                    val pokemonName = backStackEntry.arguments?.getString("pokemonName")
-                        ?: return@composable
-                    val viewModel = koinViewModel<PokemonInfoViewModel> {
-                        parametersOf(pokemonName)
+                    composable(
+                        route = "pokemonInfo/{pokemonName}",
+                        enterTransition = {
+                            fadeIn(animationSpec = tween(300))
+                        },
+                        popEnterTransition = { fadeIn(animationSpec = tween(300)) },
+                        arguments = listOf(
+                            navArgument("pokemonName") {
+                                type = NavType.StringType
+                            }
+                        )
+                    ) { backStackEntry ->
+                        val pokemonName =
+                            backStackEntry.arguments?.getString("pokemonName") ?: return@composable
+                        val viewModel = koinViewModel<PokemonInfoViewModel> {
+                            parametersOf(pokemonName)
+                        }
+                        PokemonInfoScreen(
+                            navController = navController,
+                            viewModel = viewModel
+                        )
                     }
-                    PokemonInfoScreen(
-                        viewModel = viewModel,
-                        navController = navController
-                    )
-                }
-                composable(
-                    route = "searchPokemon",
-                    enterTransition = { fadeIn(animationSpec = tween(300)) },
-                    popEnterTransition = { fadeIn(animationSpec = tween(300)) },
+                    composable(
+                        route = "searchPokemon",
+                        enterTransition = {
+                            fadeIn(animationSpec = tween(300))
+                        },
+                        popEnterTransition = { fadeIn(animationSpec = tween(300)) },
 
+                        ) {
+                        SearchPokemonScreen(
+                            navController = navController,
+                            viewModel = koinViewModel()
+                        )
+
+                    }
+
+                    composable(
+                        route = "pokemonListByType/{pokemonType}",
+                        enterTransition = {
+                            fadeIn(animationSpec = tween(300))
+                        },
+                        popEnterTransition = { fadeIn(animationSpec = tween(300)) },
                     ) {
-                    SearchPokemonScreen(
-                        navController = navController,
-                        viewModel = koinViewModel()
-                    )
+                        val pokemonType = it.arguments?.getString("pokemonType") ?: ""
+                        PokemonListByTypeScreen(
+                            navController = navController,
+                            viewModel = koinViewModel {
+                                parametersOf(pokemonType)
+                            }
+                        )
 
 
+                    }
                 }
-                composable(
-                    route = "pokemonListByType/{pokemonType}",
-                    enterTransition = { fadeIn(animationSpec = tween(300)) },
-                    popEnterTransition = { fadeIn(animationSpec = tween(300)) },
-                ) {
-                    val pokemonType = it.arguments?.getString("pokemonType") ?: ""
-                    PokemonListByTypeScreen(
-                        viewModel = koinViewModel { parametersOf(pokemonType) },
-                        navController = navController
-                    )
 
-
-                }
 
             }
 
 
         }
-
-
     }
 }
 

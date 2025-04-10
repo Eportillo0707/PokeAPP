@@ -53,3 +53,4 @@ val PokemonTypes = listOf(
     "ghost" to R.drawable.ghost,
     "steel" to R.drawable.steel
 )
+val PokemonTypeMap = PokemonTypes.toMap()
