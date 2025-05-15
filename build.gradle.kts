@@ -14,8 +14,8 @@ ext {
     set("compileSdk", 34)
     set("minSdk", 24)
     set("targetSdk", 34)
-    set("versionCode", 3)
-    set("versionName", "1.2")
+    set("versionCode", 4)
+    set("versionName", "1.2.1")
 
     set("nav_version", "2.8.6")
     set("lifecycle_version", "2.6.1")

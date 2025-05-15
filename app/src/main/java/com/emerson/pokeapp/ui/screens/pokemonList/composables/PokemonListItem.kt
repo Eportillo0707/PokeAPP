@@ -95,9 +95,7 @@ fun PokemonListItem(
                     .height(IntrinsicSize.Min)
                     .padding(top = 10.dp, bottom = 10.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement =
-                if (pokemonItem.pokemonTypes.size == 1) Arrangement.Center
-                else Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.Center
             )
             {
                 pokemonItem.pokemonTypes.forEach { type ->
