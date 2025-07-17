@@ -118,7 +118,7 @@ fun HorizontalAnimation(
         beyondViewportPageCount = 1,
         modifier = Modifier
             .padding(top = 10.dp)
-            .height(720.dp)
+            .height(750.dp)
     ) { page ->
         Card(
             shape = RoundedCornerShape(20.dp),

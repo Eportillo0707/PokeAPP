@@ -11,9 +11,9 @@ plugins {
 }
 
 ext {
-    set("compileSdk", 34)
+    set("compileSdk", 35)
     set("minSdk", 24)
-    set("targetSdk", 34)
+    set("targetSdk", 35)
     set("versionCode", 4)
     set("versionName", "1.2.1")
 
