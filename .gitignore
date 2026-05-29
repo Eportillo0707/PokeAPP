@@ -1,0 +1,85 @@
+# Git
+.git/
+
+# Gradle
+.gradle/
+build/
+*/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Android Studio / IntelliJ
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Local config
+local.properties
+
+# Android generated / build outputs
+captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+*.ap_
+*.aab
+*.dex
+
+# App build outputs
+app/build/
+app/build/generated/
+app/build/intermediates/
+app/build/outputs/
+app/build/tmp/
+
+# Generated sources
+**/build/generated/
+**/generated/
+**/ksp/
+**/kapt/
+**/kapt3/
+
+# Apollo / GraphQL generated files
+app/build/generated/checks/apollo/
+app/build/generated/source/apollo/
+app/build/generated/source/apolloTest/
+build/generated/checks/apollo/
+
+# Room generated schemas
+schemas/
+
+# Signing / keystore files
+*.jks
+*.keystore
+*.p12
+*.pfx
+*.pem
+keystore.properties
+signing.properties
+
+# Google / Firebase
+# Si quieres subir google-services.json al repo, deja esta línea comentada.
+# google-services.json
+
+# Logs
+*.log
+firebase-debug.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Kotlin / Java compiled files
+*.class
+
+# Test reports
+test-results/
+reports/
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*.orig
