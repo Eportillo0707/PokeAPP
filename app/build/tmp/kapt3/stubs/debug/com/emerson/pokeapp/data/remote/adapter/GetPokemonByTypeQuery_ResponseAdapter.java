@@ -1,0 +1,171 @@
+package com.emerson.pokeapp.data.remote.adapter;
+
+@kotlin.Metadata(mv = {1, 9, 0}, k = 1, xi = 48, d1 = {"\u0000\f\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0007\b\u00c6\u0002\u0018\u00002\u00020\u0001:\u0005\u0003\u0004\u0005\u0006\u0007B\u0007\b\u0002\u00a2\u0006\u0002\u0010\u0002\u00a8\u0006\b"}, d2 = {"Lcom/emerson/pokeapp/data/remote/adapter/GetPokemonByTypeQuery_ResponseAdapter;", "", "()V", "Data", "Pokemon_v2_pokemon", "Pokemon_v2_pokemontype", "Pokemon_v2_pokemontype1", "Pokemon_v2_type", "app_debug"})
+public final class GetPokemonByTypeQuery_ResponseAdapter {
+    @org.jetbrains.annotations.NotNull()
+    public static final com.emerson.pokeapp.data.remote.adapter.GetPokemonByTypeQuery_ResponseAdapter INSTANCE = null;
+    
+    private GetPokemonByTypeQuery_ResponseAdapter() {
+        super();
+    }
+    
+    @kotlin.Metadata(mv = {1, 9, 0}, k = 1, xi = 48, d1 = {"\u00006\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010 \n\u0002\u0010\u000e\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\b\u00c6\u0002\u0018\u00002\b\u0012\u0004\u0012\u00020\u00020\u0001B\u0007\b\u0002\u00a2\u0006\u0002\u0010\u0003J\u0018\u0010\t\u001a\u00020\u00022\u0006\u0010\n\u001a\u00020\u000b2\u0006\u0010\f\u001a\u00020\rH\u0016J \u0010\u000e\u001a\u00020\u000f2\u0006\u0010\u0010\u001a\u00020\u00112\u0006\u0010\f\u001a\u00020\r2\u0006\u0010\u0012\u001a\u00020\u0002H\u0016R\u0017\u0010\u0004\u001a\b\u0012\u0004\u0012\u00020\u00060\u0005\u00a2\u0006\b\n\u0000\u001a\u0004\b\u0007\u0010\b\u00a8\u0006\u0013"}, d2 = {"Lcom/emerson/pokeapp/data/remote/adapter/GetPokemonByTypeQuery_ResponseAdapter$Data;", "Lcom/apollographql/apollo3/api/Adapter;", "Lcom/emerson/pokeapp/data/remote/GetPokemonByTypeQuery$Data;", "()V", "RESPONSE_NAMES", "", "", "getRESPONSE_NAMES", "()Ljava/util/List;", "fromJson", "reader", "Lcom/apollographql/apollo3/api/json/JsonReader;", "customScalarAdapters", "Lcom/apollographql/apollo3/api/CustomScalarAdapters;", "toJson", "", "writer", "Lcom/apollographql/apollo3/api/json/JsonWriter;", "value", "app_debug"})
+    public static final class Data implements com.apollographql.apollo3.api.Adapter<com.emerson.pokeapp.data.remote.GetPokemonByTypeQuery.Data> {
+        @org.jetbrains.annotations.NotNull()
+        private static final java.util.List<java.lang.String> RESPONSE_NAMES = null;
+        @org.jetbrains.annotations.NotNull()
+        public static final com.emerson.pokeapp.data.remote.adapter.GetPokemonByTypeQuery_ResponseAdapter.Data INSTANCE = null;
+        
+        private Data() {
+            super();
+        }
+        
+        @org.jetbrains.annotations.NotNull()
+        public final java.util.List<java.lang.String> getRESPONSE_NAMES() {
+            return null;
+        }
+        
+        @java.lang.Override()
+        @org.jetbrains.annotations.NotNull()
+        public com.emerson.pokeapp.data.remote.GetPokemonByTypeQuery.Data fromJson(@org.jetbrains.annotations.NotNull()
+        com.apollographql.apollo3.api.json.JsonReader reader, @org.jetbrains.annotations.NotNull()
+        com.apollographql.apollo3.api.CustomScalarAdapters customScalarAdapters) {
+            return null;
+        }
+        
+        @java.lang.Override()
+        public void toJson(@org.jetbrains.annotations.NotNull()
+        com.apollographql.apollo3.api.json.JsonWriter writer, @org.jetbrains.annotations.NotNull()
+        com.apollographql.apollo3.api.CustomScalarAdapters customScalarAdapters, @org.jetbrains.annotations.NotNull()
+        com.emerson.pokeapp.data.remote.GetPokemonByTypeQuery.Data value) {
+        }
+    }
+    
+    @kotlin.Metadata(mv = {1, 9, 0}, k = 1, xi = 48, d1 = {"\u00006\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010 \n\u0002\u0010\u000e\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\b\u00c6\u0002\u0018\u00002\b\u0012\u0004\u0012\u00020\u00020\u0001B\u0007\b\u0002\u00a2\u0006\u0002\u0010\u0003J\u0018\u0010\t\u001a\u00020\u00022\u0006\u0010\n\u001a\u00020\u000b2\u0006\u0010\f\u001a\u00020\rH\u0016J \u0010\u000e\u001a\u00020\u000f2\u0006\u0010\u0010\u001a\u00020\u00112\u0006\u0010\f\u001a\u00020\r2\u0006\u0010\u0012\u001a\u00020\u0002H\u0016R\u0017\u0010\u0004\u001a\b\u0012\u0004\u0012\u00020\u00060\u0005\u00a2\u0006\b\n\u0000\u001a\u0004\b\u0007\u0010\b\u00a8\u0006\u0013"}, d2 = {"Lcom/emerson/pokeapp/data/remote/adapter/GetPokemonByTypeQuery_ResponseAdapter$Pokemon_v2_pokemon;", "Lcom/apollographql/apollo3/api/Adapter;", "Lcom/emerson/pokeapp/data/remote/GetPokemonByTypeQuery$Pokemon_v2_pokemon;", "()V", "RESPONSE_NAMES", "", "", "getRESPONSE_NAMES", "()Ljava/util/List;", "fromJson", "reader", "Lcom/apollographql/apollo3/api/json/JsonReader;", "customScalarAdapters", "Lcom/apollographql/apollo3/api/CustomScalarAdapters;", "toJson", "", "writer", "Lcom/apollographql/apollo3/api/json/JsonWriter;", "value", "app_debug"})
+    public static final class Pokemon_v2_pokemon implements com.apollographql.apollo3.api.Adapter<com.emerson.pokeapp.data.remote.GetPokemonByTypeQuery.Pokemon_v2_pokemon> {
+        @org.jetbrains.annotations.NotNull()
+        private static final java.util.List<java.lang.String> RESPONSE_NAMES = null;
+        @org.jetbrains.annotations.NotNull()
+        public static final com.emerson.pokeapp.data.remote.adapter.GetPokemonByTypeQuery_ResponseAdapter.Pokemon_v2_pokemon INSTANCE = null;
+        
+        private Pokemon_v2_pokemon() {
+            super();
+        }
+        
+        @org.jetbrains.annotations.NotNull()
+        public final java.util.List<java.lang.String> getRESPONSE_NAMES() {
+            return null;
+        }
+        
+        @java.lang.Override()
+        @org.jetbrains.annotations.NotNull()
+        public com.emerson.pokeapp.data.remote.GetPokemonByTypeQuery.Pokemon_v2_pokemon fromJson(@org.jetbrains.annotations.NotNull()
+        com.apollographql.apollo3.api.json.JsonReader reader, @org.jetbrains.annotations.NotNull()
+        com.apollographql.apollo3.api.CustomScalarAdapters customScalarAdapters) {
+            return null;
+        }
+        
+        @java.lang.Override()
+        public void toJson(@org.jetbrains.annotations.NotNull()
+        com.apollographql.apollo3.api.json.JsonWriter writer, @org.jetbrains.annotations.NotNull()
+        com.apollographql.apollo3.api.CustomScalarAdapters customScalarAdapters, @org.jetbrains.annotations.NotNull()
+        com.emerson.pokeapp.data.remote.GetPokemonByTypeQuery.Pokemon_v2_pokemon value) {
+        }
+    }
+    
+    @kotlin.Metadata(mv = {1, 9, 0}, k = 1, xi = 48, d1 = {"\u00006\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010 \n\u0002\u0010\u000e\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\b\u00c6\u0002\u0018\u00002\b\u0012\u0004\u0012\u00020\u00020\u0001B\u0007\b\u0002\u00a2\u0006\u0002\u0010\u0003J\u0018\u0010\t\u001a\u00020\u00022\u0006\u0010\n\u001a\u00020\u000b2\u0006\u0010\f\u001a\u00020\rH\u0016J \u0010\u000e\u001a\u00020\u000f2\u0006\u0010\u0010\u001a\u00020\u00112\u0006\u0010\f\u001a\u00020\r2\u0006\u0010\u0012\u001a\u00020\u0002H\u0016R\u0017\u0010\u0004\u001a\b\u0012\u0004\u0012\u00020\u00060\u0005\u00a2\u0006\b\n\u0000\u001a\u0004\b\u0007\u0010\b\u00a8\u0006\u0013"}, d2 = {"Lcom/emerson/pokeapp/data/remote/adapter/GetPokemonByTypeQuery_ResponseAdapter$Pokemon_v2_pokemontype;", "Lcom/apollographql/apollo3/api/Adapter;", "Lcom/emerson/pokeapp/data/remote/GetPokemonByTypeQuery$Pokemon_v2_pokemontype;", "()V", "RESPONSE_NAMES", "", "", "getRESPONSE_NAMES", "()Ljava/util/List;", "fromJson", "reader", "Lcom/apollographql/apollo3/api/json/JsonReader;", "customScalarAdapters", "Lcom/apollographql/apollo3/api/CustomScalarAdapters;", "toJson", "", "writer", "Lcom/apollographql/apollo3/api/json/JsonWriter;", "value", "app_debug"})
+    public static final class Pokemon_v2_pokemontype implements com.apollographql.apollo3.api.Adapter<com.emerson.pokeapp.data.remote.GetPokemonByTypeQuery.Pokemon_v2_pokemontype> {
+        @org.jetbrains.annotations.NotNull()
+        private static final java.util.List<java.lang.String> RESPONSE_NAMES = null;
+        @org.jetbrains.annotations.NotNull()
+        public static final com.emerson.pokeapp.data.remote.adapter.GetPokemonByTypeQuery_ResponseAdapter.Pokemon_v2_pokemontype INSTANCE = null;
+        
+        private Pokemon_v2_pokemontype() {
+            super();
+        }
+        
+        @org.jetbrains.annotations.NotNull()
+        public final java.util.List<java.lang.String> getRESPONSE_NAMES() {
+            return null;
+        }
+        
+        @java.lang.Override()
+        @org.jetbrains.annotations.NotNull()
+        public com.emerson.pokeapp.data.remote.GetPokemonByTypeQuery.Pokemon_v2_pokemontype fromJson(@org.jetbrains.annotations.NotNull()
+        com.apollographql.apollo3.api.json.JsonReader reader, @org.jetbrains.annotations.NotNull()
+        com.apollographql.apollo3.api.CustomScalarAdapters customScalarAdapters) {
+            return null;
+        }
+        
+        @java.lang.Override()
+        public void toJson(@org.jetbrains.annotations.NotNull()
+        com.apollographql.apollo3.api.json.JsonWriter writer, @org.jetbrains.annotations.NotNull()
+        com.apollographql.apollo3.api.CustomScalarAdapters customScalarAdapters, @org.jetbrains.annotations.NotNull()
+        com.emerson.pokeapp.data.remote.GetPokemonByTypeQuery.Pokemon_v2_pokemontype value) {
+        }
+    }
+    
+    @kotlin.Metadata(mv = {1, 9, 0}, k = 1, xi = 48, d1 = {"\u00006\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010 \n\u0002\u0010\u000e\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\b\u00c6\u0002\u0018\u00002\b\u0012\u0004\u0012\u00020\u00020\u0001B\u0007\b\u0002\u00a2\u0006\u0002\u0010\u0003J\u0018\u0010\t\u001a\u00020\u00022\u0006\u0010\n\u001a\u00020\u000b2\u0006\u0010\f\u001a\u00020\rH\u0016J \u0010\u000e\u001a\u00020\u000f2\u0006\u0010\u0010\u001a\u00020\u00112\u0006\u0010\f\u001a\u00020\r2\u0006\u0010\u0012\u001a\u00020\u0002H\u0016R\u0017\u0010\u0004\u001a\b\u0012\u0004\u0012\u00020\u00060\u0005\u00a2\u0006\b\n\u0000\u001a\u0004\b\u0007\u0010\b\u00a8\u0006\u0013"}, d2 = {"Lcom/emerson/pokeapp/data/remote/adapter/GetPokemonByTypeQuery_ResponseAdapter$Pokemon_v2_pokemontype1;", "Lcom/apollographql/apollo3/api/Adapter;", "Lcom/emerson/pokeapp/data/remote/GetPokemonByTypeQuery$Pokemon_v2_pokemontype1;", "()V", "RESPONSE_NAMES", "", "", "getRESPONSE_NAMES", "()Ljava/util/List;", "fromJson", "reader", "Lcom/apollographql/apollo3/api/json/JsonReader;", "customScalarAdapters", "Lcom/apollographql/apollo3/api/CustomScalarAdapters;", "toJson", "", "writer", "Lcom/apollographql/apollo3/api/json/JsonWriter;", "value", "app_debug"})
+    public static final class Pokemon_v2_pokemontype1 implements com.apollographql.apollo3.api.Adapter<com.emerson.pokeapp.data.remote.GetPokemonByTypeQuery.Pokemon_v2_pokemontype1> {
+        @org.jetbrains.annotations.NotNull()
+        private static final java.util.List<java.lang.String> RESPONSE_NAMES = null;
+        @org.jetbrains.annotations.NotNull()
+        public static final com.emerson.pokeapp.data.remote.adapter.GetPokemonByTypeQuery_ResponseAdapter.Pokemon_v2_pokemontype1 INSTANCE = null;
+        
+        private Pokemon_v2_pokemontype1() {
+            super();
+        }
+        
+        @org.jetbrains.annotations.NotNull()
+        public final java.util.List<java.lang.String> getRESPONSE_NAMES() {
+            return null;
+        }
+        
+        @java.lang.Override()
+        @org.jetbrains.annotations.NotNull()
+        public com.emerson.pokeapp.data.remote.GetPokemonByTypeQuery.Pokemon_v2_pokemontype1 fromJson(@org.jetbrains.annotations.NotNull()
+        com.apollographql.apollo3.api.json.JsonReader reader, @org.jetbrains.annotations.NotNull()
+        com.apollographql.apollo3.api.CustomScalarAdapters customScalarAdapters) {
+            return null;
+        }
+        
+        @java.lang.Override()
+        public void toJson(@org.jetbrains.annotations.NotNull()
+        com.apollographql.apollo3.api.json.JsonWriter writer, @org.jetbrains.annotations.NotNull()
+        com.apollographql.apollo3.api.CustomScalarAdapters customScalarAdapters, @org.jetbrains.annotations.NotNull()
+        com.emerson.pokeapp.data.remote.GetPokemonByTypeQuery.Pokemon_v2_pokemontype1 value) {
+        }
+    }
+    
+    @kotlin.Metadata(mv = {1, 9, 0}, k = 1, xi = 48, d1 = {"\u00006\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010 \n\u0002\u0010\u000e\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\b\u00c6\u0002\u0018\u00002\b\u0012\u0004\u0012\u00020\u00020\u0001B\u0007\b\u0002\u00a2\u0006\u0002\u0010\u0003J\u0018\u0010\t\u001a\u00020\u00022\u0006\u0010\n\u001a\u00020\u000b2\u0006\u0010\f\u001a\u00020\rH\u0016J \u0010\u000e\u001a\u00020\u000f2\u0006\u0010\u0010\u001a\u00020\u00112\u0006\u0010\f\u001a\u00020\r2\u0006\u0010\u0012\u001a\u00020\u0002H\u0016R\u0017\u0010\u0004\u001a\b\u0012\u0004\u0012\u00020\u00060\u0005\u00a2\u0006\b\n\u0000\u001a\u0004\b\u0007\u0010\b\u00a8\u0006\u0013"}, d2 = {"Lcom/emerson/pokeapp/data/remote/adapter/GetPokemonByTypeQuery_ResponseAdapter$Pokemon_v2_type;", "Lcom/apollographql/apollo3/api/Adapter;", "Lcom/emerson/pokeapp/data/remote/GetPokemonByTypeQuery$Pokemon_v2_type;", "()V", "RESPONSE_NAMES", "", "", "getRESPONSE_NAMES", "()Ljava/util/List;", "fromJson", "reader", "Lcom/apollographql/apollo3/api/json/JsonReader;", "customScalarAdapters", "Lcom/apollographql/apollo3/api/CustomScalarAdapters;", "toJson", "", "writer", "Lcom/apollographql/apollo3/api/json/JsonWriter;", "value", "app_debug"})
+    public static final class Pokemon_v2_type implements com.apollographql.apollo3.api.Adapter<com.emerson.pokeapp.data.remote.GetPokemonByTypeQuery.Pokemon_v2_type> {
+        @org.jetbrains.annotations.NotNull()
+        private static final java.util.List<java.lang.String> RESPONSE_NAMES = null;
+        @org.jetbrains.annotations.NotNull()
+        public static final com.emerson.pokeapp.data.remote.adapter.GetPokemonByTypeQuery_ResponseAdapter.Pokemon_v2_type INSTANCE = null;
+        
+        private Pokemon_v2_type() {
+            super();
+        }
+        
+        @org.jetbrains.annotations.NotNull()
+        public final java.util.List<java.lang.String> getRESPONSE_NAMES() {
+            return null;
+        }
+        
+        @java.lang.Override()
+        @org.jetbrains.annotations.NotNull()
+        public com.emerson.pokeapp.data.remote.GetPokemonByTypeQuery.Pokemon_v2_type fromJson(@org.jetbrains.annotations.NotNull()
+        com.apollographql.apollo3.api.json.JsonReader reader, @org.jetbrains.annotations.NotNull()
+        com.apollographql.apollo3.api.CustomScalarAdapters customScalarAdapters) {
+            return null;
+        }
+        
+        @java.lang.Override()
+        public void toJson(@org.jetbrains.annotations.NotNull()
+        com.apollographql.apollo3.api.json.JsonWriter writer, @org.jetbrains.annotations.NotNull()
+        com.apollographql.apollo3.api.CustomScalarAdapters customScalarAdapters, @org.jetbrains.annotations.NotNull()
+        com.emerson.pokeapp.data.remote.GetPokemonByTypeQuery.Pokemon_v2_type value) {
+        }
+    }
+}
