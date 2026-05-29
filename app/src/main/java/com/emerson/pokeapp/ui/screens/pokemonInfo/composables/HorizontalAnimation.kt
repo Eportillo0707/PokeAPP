@@ -1,5 +1,8 @@
 package com.emerson.pokeapp.ui.screens.pokemonInfo.composables
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -39,11 +42,14 @@ import com.emerson.pokeapp.domain.model.PokemonInfo
 import com.emerson.pokeapp.domain.model.TypeEffectiveness
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun HorizontalAnimation(
     resistances: TypeEffectiveness,
     pokemon: PokemonInfo,
-    navController: NavController
+    navController: NavController,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
 ) {
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { 2 })
     val coroutineScope = rememberCoroutineScope()
@@ -158,7 +164,9 @@ fun HorizontalAnimation(
 
                         EvolutionChain(
                             pokemon = pokemon,
-                            navController = navController
+                            navController = navController,
+                            sharedTransitionScope = sharedTransitionScope,
+                            animatedVisibilityScope = animatedVisibilityScope
                         )
                     }
                 }
@@ -170,7 +178,11 @@ fun HorizontalAnimation(
                             .verticalScroll(rememberScrollState())
                             .padding(bottom = 16.dp)
                     ) {
-                        Stats(pokemon = pokemon)
+                        Stats(
+                            pokemon = pokemon,
+                            animateStats = pagerState.currentPage == 1
+                        )
+
                         TypesDetails(resistances = resistances)
                     }
                 }

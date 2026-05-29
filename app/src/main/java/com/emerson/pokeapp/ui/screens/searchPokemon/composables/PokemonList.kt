@@ -1,5 +1,8 @@
 package com.emerson.pokeapp.ui.screens.searchPokemon.composables
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ColumnScope
@@ -27,11 +30,14 @@ import com.emerson.pokeapp.ui.utils.UiState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun ColumnScope.PokemonList(
     searchResultState: StateFlow<UiState<Flow<PagingData<PokemonItem>>>>,
-    onClick: (String) -> Unit
-
+    onClick: (PokemonItem) -> Unit,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    selectedPokemonNameForTransition: String?
 ) {
     val state by searchResultState.collectAsState()
 
@@ -50,7 +56,7 @@ fun ColumnScope.PokemonList(
         }
 
         is UiState.Result -> {
-            val paginItems = result.data.collectAsLazyPagingItems()
+            val pagingItems = result.data.collectAsLazyPagingItems()
 
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
@@ -61,18 +67,22 @@ fun ColumnScope.PokemonList(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(paginItems.itemCount) { index ->
-                    val pokemon = paginItems[index]
+                items(pagingItems.itemCount) { index ->
+                    val pokemon = pagingItems[index]
+
                     if (pokemon != null) {
-                        PokemonListItem(pokemonItem = pokemon,
-                            onCLick = {onClick(pokemon.name)}
+                        PokemonListItem(
+                            pokemonItem = pokemon,
+                            sharedTransitionScope = sharedTransitionScope,
+                            animatedVisibilityScope = animatedVisibilityScope,
+                            enableSharedTransition = selectedPokemonNameForTransition == pokemon.name,
+                            onCLick = {
+                                onClick(pokemon)
+                            }
                         )
                     }
                 }
-
             }
         }
-
     }
-
 }

@@ -1,5 +1,8 @@
 package com.emerson.pokeapp.ui.screens.pokemonInfo
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -47,22 +50,72 @@ import com.emerson.pokeapp.ui.screens.pokemonInfo.composables.TopCircle
 import com.emerson.pokeapp.ui.theme.montserratFamily
 import com.emerson.pokeapp.ui.utils.UiState
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun PokemonInfoScreen(
     viewModel: PokemonInfoViewModel,
     navController: NavController,
-
-    ) {
+    initialPokemonName: String,
+    initialPokemonId: Int?,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
+) {
     val pokemonState = viewModel.pokemonInfo.collectAsState()
     val resistances = viewModel.resistances.collectAsState()
+
     when (val state = pokemonState.value) {
         is UiState.Loading -> {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color(0xFF121422))
-            )
-            AppLoading()
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color(0xFF121422))
+                    ) {
+                        IconButton(
+                            onClick = { navController.popBackStack() },
+                            modifier = Modifier.align(Alignment.CenterStart)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.ArrowBack,
+                                contentDescription = "Back",
+                                tint = Color.White
+                            )
+                        }
+
+                        Text(
+                            text = "Pokemon Info",
+                            color = Color.LightGray,
+                            fontFamily = montserratFamily,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 20.sp,
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                    }
+
+                    if (initialPokemonId != null) {
+                        Box {
+                            PokemonImage(
+                                pokemonItem = PokemonItem(
+                                    name = initialPokemonName,
+                                    id = initialPokemonId,
+                                    pokemonTypes = emptyList()
+                                ),
+                                sharedTransitionScope = sharedTransitionScope,
+                                animatedVisibilityScope = animatedVisibilityScope
+                            )
+                        }
+                    } else {
+                        AppLoading()
+                    }
+                }
+            }
         }
 
         is UiState.Error -> {
@@ -72,14 +125,6 @@ fun PokemonInfoScreen(
         is UiState.Result -> {
             val pokemon = state.data
 
-            PokemonItem(
-                name = pokemon.name,
-                id = pokemon.id,
-                pokemonTypes = pokemon.types,
-                isFavored = pokemon.isFavored
-            )
-
-
             ScreenContent(
                 pokemon = pokemon,
                 resistances = resistances.value,
@@ -87,17 +132,20 @@ fun PokemonInfoScreen(
                 pokemonItem = PokemonItem(
                     name = pokemon.name,
                     id = pokemon.id,
-                    pokemonTypes = pokemon.types
+                    pokemonTypes = pokemon.types,
+                    isFavored = pokemon.isFavored
                 ),
+                sharedTransitionScope = sharedTransitionScope,
+                animatedVisibilityScope = animatedVisibilityScope,
                 onFavoriteClick = {
                     viewModel.onFavoriteButtonClicked()
-
                 }
             )
         }
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun ScreenContent(
     pokemon: PokemonInfo,
@@ -105,30 +153,29 @@ private fun ScreenContent(
     pokemonItem: PokemonItem,
     navController: NavController,
     modifier: Modifier = Modifier,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
     onFavoriteClick: () -> Unit = {}
 ) {
-
     val typeColors = remember { pokemon.types.map { getPokemonTypeColor(it) } }
     val lazyListState = rememberLazyListState()
+
     LaunchedEffect(pokemon.id) {
         lazyListState.animateScrollToItem(0)
     }
+
     Box(
         modifier = modifier
             .fillMaxSize()
             .background(Color(0xFF121422))
-
     ) {
-
         Column(
-            modifier = modifier
-                .fillMaxSize()
+            modifier = modifier.fillMaxSize()
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(Color(0xFF121422))
-
             ) {
                 IconButton(
                     onClick = { navController.popBackStack() },
@@ -140,14 +187,14 @@ private fun ScreenContent(
                         tint = Color.White
                     )
                 }
+
                 Text(
                     text = "Pokemon Info",
                     color = Color.LightGray,
                     fontFamily = montserratFamily,
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp,
-                    modifier = Modifier
-                        .align(Alignment.Center)
+                    modifier = Modifier.align(Alignment.Center)
                 )
             }
 
@@ -158,44 +205,44 @@ private fun ScreenContent(
                     .background(Color(0xFF121422))
             ) {
                 item {
-
-                    Box(
-                    ) {
-
+                    Box {
                         TopCircle(
-                            typeColors = typeColors,
+                            typeColors = typeColors
                         )
+
                         FavoriteButton(
-                            icon = if (pokemonItem.isFavored) Icons.Filled.Star else Icons.Outlined.StarBorder,
+                            icon = if (pokemonItem.isFavored) {
+                                Icons.Filled.Star
+                            } else {
+                                Icons.Outlined.StarBorder
+                            },
                             isSelected = pokemon.isFavored,
-                            onCLick = onFavoriteClick,
-
-                            )
-
+                            onCLick = onFavoriteClick
+                        )
 
                         PokemonImage(
-                            pokemonItem = pokemonItem
+                            pokemonItem = pokemonItem,
+                            sharedTransitionScope = sharedTransitionScope,
+                            animatedVisibilityScope = animatedVisibilityScope
                         )
                     }
+
                     Row(
                         modifier = modifier
                             .fillMaxWidth()
                             .wrapContentHeight(),
-                        horizontalArrangement =
-                        if (pokemonItem.pokemonTypes.size == 1) Arrangement.Center
-                        else Arrangement.Center
-                    )
-                    {
+                        horizontalArrangement = Arrangement.Center
+                    ) {
                         pokemonItem.pokemonTypes.forEach { type ->
                             val iconId = TypeIcons[type.lowercase()]
+
                             if (iconId != null) {
                                 Box(
-                                    contentAlignment = Alignment.Center,
+                                    contentAlignment = Alignment.Center
                                 ) {
                                     Image(
                                         painter = painterResource(id = iconId),
                                         contentDescription = null,
-
                                         modifier = modifier
                                             .width(150.dp)
                                             .height(60.dp)
@@ -205,21 +252,18 @@ private fun ScreenContent(
                             }
                         }
                     }
-
                 }
+
                 item {
                     HorizontalAnimation(
                         resistances = resistances,
                         pokemon = pokemon,
-                        navController = navController
+                        navController = navController,
+                        sharedTransitionScope = sharedTransitionScope,
+                        animatedVisibilityScope = animatedVisibilityScope
                     )
-
                 }
-
             }
         }
     }
-
 }
-
-

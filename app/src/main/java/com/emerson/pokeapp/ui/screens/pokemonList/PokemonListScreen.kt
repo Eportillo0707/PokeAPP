@@ -1,6 +1,8 @@
 package com.emerson.pokeapp.ui.screens.pokemonList
 
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,65 +25,77 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.paging.PagingData
 import com.emerson.pokeapp.domain.model.PokemonItem
 import com.emerson.pokeapp.ui.screens.pokemonList.composables.HeaderButtons
 import com.emerson.pokeapp.ui.screens.pokemonList.composables.ListItem
-import com.emerson.pokeapp.ui.theme.PokeAppTheme
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun PokemonListScreen(
     viewModel: PokemonListViewModel,
     modifier: Modifier = Modifier,
     navController: NavController,
-
-    ) {
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
+) {
     ScreenContent(
         pokemonList = viewModel.pokemonItem,
         onSearchClick = { navController.navigate("searchPokemon") },
-        onPokemonClick = { pokemonName ->
-            navController.navigate("pokemonInfo/$pokemonName")
-        }
+        onPokemonClick = { pokemon ->
+            navController.navigate("pokemonInfo/${pokemon.name}?pokemonId=${pokemon.id}")
+        },
+        sharedTransitionScope = sharedTransitionScope,
+        animatedVisibilityScope = animatedVisibilityScope
     )
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun ScreenContent(
     pokemonList: StateFlow<PagingData<PokemonItem>>,
     onSearchClick: () -> Unit,
-    onPokemonClick: (String) -> Unit,
-
+    onPokemonClick: (PokemonItem) -> Unit,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
 ) {
-
     val listState = rememberLazyGridState()
     val coroutineScope = rememberCoroutineScope()
     var showButton by remember { mutableStateOf(false) }
+
     LaunchedEffect(listState.firstVisibleItemIndex) {
         showButton = listState.firstVisibleItemIndex > 0
     }
-    Box(modifier = Modifier.fillMaxSize()) {
+
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFF121422)),
+                .background(Color(0xFF121422))
         ) {
             Spacer(modifier = Modifier.height(10.dp))
+
             HeaderButtons(
                 onSearchClick = onSearchClick
             )
+
             Spacer(modifier = Modifier.height(10.dp))
+
             ListItem(
                 pokemonList = pokemonList,
                 onClick = onPokemonClick,
-                listState = listState
+                listState = listState,
+                sharedTransitionScope = sharedTransitionScope,
+                animatedVisibilityScope = animatedVisibilityScope
             )
         }
+
         if (showButton) {
             FloatingActionButton(
                 onClick = {
@@ -95,35 +109,11 @@ private fun ScreenContent(
                     .align(Alignment.TopEnd)
                     .padding(end = 8.dp, top = 75.dp)
             ) {
-                Icon(Icons.Default.ArrowUpward, contentDescription = "Scroll to Top")
+                Icon(
+                    imageVector = Icons.Default.ArrowUpward,
+                    contentDescription = "Scroll to Top"
+                )
             }
         }
     }
 }
-
-@Preview(showBackground = true)
-@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
-@Composable
-fun ScreenPreview() {
-
-    PokeAppTheme {
-        val pokemonList = MutableStateFlow(
-            PagingData.from(
-                listOf(
-                    PokemonItem(
-                        name = "Pikachu",
-                        id = 1,
-                        pokemonTypes = listOf("Grass", "Poison")
-                    )
-                )
-            )
-        )
-        ScreenContent(
-            pokemonList = pokemonList,
-            onSearchClick = {},
-            onPokemonClick = {}
-        )
-
-    }
-}
-

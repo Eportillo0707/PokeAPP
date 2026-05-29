@@ -110,6 +110,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-core:$material3_compose_version")
     implementation("androidx.compose.material:material-icons-extended:$material3_compose_version")
     implementation(libs.androidx.ui.text.google.fonts)
+    implementation("androidx.compose.animation:animation:${compose_version}")
 
     debugImplementation("androidx.compose.ui:ui-tooling:$compose_version")
 

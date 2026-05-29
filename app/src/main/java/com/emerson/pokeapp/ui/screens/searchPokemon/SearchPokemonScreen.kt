@@ -1,6 +1,9 @@
 package com.emerson.pokeapp.ui.screens.searchPokemon
 
 import android.content.res.Configuration
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -23,6 +26,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,40 +44,56 @@ import com.emerson.pokeapp.domain.model.PokemonItem
 import com.emerson.pokeapp.ui.screens.pokemonList.composables.FilterButton
 import com.emerson.pokeapp.ui.screens.searchPokemon.composables.PokemonList
 import com.emerson.pokeapp.ui.utils.UiState
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun SearchPokemonScreen(
     viewModel: SearchPokemonViewModel,
-    navController: NavController
+    navController: NavController,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
 ) {
     ScreenContent(
         navController = navController,
         onQueryChanged = viewModel::onSearchQueryChanged,
         searchResultState = viewModel.searchResultState,
-
-        onPokemonClick = { pokemonName ->
-            navController.navigate("pokemonInfo/$pokemonName")
-        }
+        sharedTransitionScope = sharedTransitionScope,
+        animatedVisibilityScope = animatedVisibilityScope
     )
-
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun ScreenContent(
     onQueryChanged: (String) -> Unit,
     searchResultState: StateFlow<UiState<Flow<PagingData<PokemonItem>>>>,
-    onPokemonClick: (String) -> Unit,
-    navController: NavController
-
-    ) {
-
+    navController: NavController,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
+) {
     val textFieldFocusRequester = remember { FocusRequester() }
+    val coroutineScope = rememberCoroutineScope()
+
+    var selectedPokemonNameForTransition by rememberSaveable {
+        mutableStateOf<String?>(null)
+    }
+
+    fun navigateWithSharedTransition(pokemon: PokemonItem) {
+        selectedPokemonNameForTransition = pokemon.name
+
+        coroutineScope.launch {
+            delay(40)
+            navController.navigate("pokemonInfo/${pokemon.name}?pokemonId=${pokemon.id}")
+        }
+    }
+
     LaunchedEffect(Unit) {
         textFieldFocusRequester.requestFocus()
     }
-
 
     Column(
         modifier = Modifier
@@ -80,6 +101,7 @@ private fun ScreenContent(
             .background(Color(0xFF121422))
     ) {
         var text by remember { mutableStateOf("") }
+
         Spacer(modifier = Modifier.height(10.dp))
 
         BasicTextField(
@@ -96,9 +118,10 @@ private fun ScreenContent(
                 .background(Color(0xFF232B4C), RoundedCornerShape(12.dp))
                 .focusRequester(textFieldFocusRequester)
                 .padding(horizontal = 12.dp, vertical = 6.dp),
-
-            textStyle = TextStyle(color = Color.White, fontSize = 14.sp),
-
+            textStyle = TextStyle(
+                color = Color.White,
+                fontSize = 14.sp
+            ),
             decorationBox = { innerTextField ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -110,13 +133,21 @@ private fun ScreenContent(
                         modifier = Modifier.size(18.dp),
                         tint = Color.White
                     )
+
                     Spacer(modifier = Modifier.width(8.dp))
+
                     Box(modifier = Modifier.weight(1f)) {
                         if (text.isEmpty()) {
-                            Text("Search", color = Color.LightGray, fontSize = 14.sp)
+                            Text(
+                                text = "Search",
+                                color = Color.LightGray,
+                                fontSize = 14.sp
+                            )
                         }
+
                         innerTextField()
                     }
+
                     FilterButton(
                         onTypeSelected = { type ->
                             navController.navigate("pokemonListByType/$type")
@@ -125,10 +156,17 @@ private fun ScreenContent(
                 }
             }
         )
+
         Spacer(modifier = Modifier.height(10.dp))
+
         PokemonList(
             searchResultState = searchResultState,
-            onClick = onPokemonClick
+            onClick = { pokemon ->
+                navigateWithSharedTransition(pokemon)
+            },
+            sharedTransitionScope = sharedTransitionScope,
+            animatedVisibilityScope = animatedVisibilityScope,
+            selectedPokemonNameForTransition = selectedPokemonNameForTransition
         )
     }
 }

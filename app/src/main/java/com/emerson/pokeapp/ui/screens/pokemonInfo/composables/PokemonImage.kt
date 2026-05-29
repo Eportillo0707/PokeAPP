@@ -1,6 +1,11 @@
 package com.emerson.pokeapp.ui.screens.pokemonInfo.composables
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -22,26 +27,42 @@ import com.emerson.pokeapp.ui.screens.pokemonList.composables.ImageLoading
 import com.emerson.pokeapp.ui.theme.montserratFamily
 import com.emerson.pokeapp.ui.utils.formatPokemonName
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun PokemonImage(
-    pokemonItem: PokemonItem
+    pokemonItem: PokemonItem,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
 ) {
     val displayName = formatPokemonName(pokemonItem.name)
 
-    Box(
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxWidth()
     ) {
-        SubcomposeAsyncImage(
-            model = pokemonItem.ImageUrl,
-            contentDescription = "Pokemon Image",
-            loading = { ImageLoading() },
-            error = { },
-            contentScale = ContentScale.Fit,
-            modifier = Modifier
-                .size(350.dp)
-                .align(Alignment.TopCenter)
-                .padding(top = 20.dp)
-        )
+        with(sharedTransitionScope) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .padding(top = 20.dp)
+                    .size(315.dp)
+                    .sharedElement(
+                        sharedContentState = rememberSharedContentState(
+                            key = "pokemon-image-${pokemonItem.name}"
+                        ),
+                        animatedVisibilityScope = animatedVisibilityScope
+                    )
+            ) {
+                SubcomposeAsyncImage(
+                    model = pokemonItem.ImageUrl,
+                    contentDescription = "Pokemon Image",
+                    loading = { ImageLoading() },
+                    error = { },
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+        }
 
         BasicText(
             text = displayName,
@@ -58,12 +79,8 @@ fun PokemonImage(
                 maxFontSize = 50.sp
             ),
             modifier = Modifier
-                .padding(
-                    top = 320.dp,
-                    start = 16.dp,
-                    end = 16.dp
-                )
                 .fillMaxWidth()
+                .padding(horizontal = 16.dp)
         )
     }
 }

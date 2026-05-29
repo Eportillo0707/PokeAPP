@@ -1,5 +1,8 @@
 package com.emerson.pokeapp.ui.screens.pokemonList.composables
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ColumnScope
@@ -21,17 +24,22 @@ import com.emerson.pokeapp.ui.components.AppError
 import com.emerson.pokeapp.ui.components.AppLoading
 import kotlinx.coroutines.flow.StateFlow
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun ColumnScope.ListItem(
     pokemonList: StateFlow<PagingData<PokemonItem>>,
-    onClick: (String) -> Unit,
-    listState: LazyGridState
+    onClick: (PokemonItem) -> Unit,
+    listState: LazyGridState,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
 ) {
     val pokemonState = pokemonList.collectAsLazyPagingItems()
 
     when (pokemonState.loadState.refresh) {
         is LoadState.Loading -> {
-            AppLoading(modifier = Modifier.align(Alignment.CenterHorizontally))
+            AppLoading(
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
         }
 
         is LoadState.Error -> {
@@ -50,22 +58,22 @@ fun ColumnScope.ListItem(
                 contentPadding = PaddingValues(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
-
             ) {
                 items(pokemonState.itemCount) { index ->
                     val pokemon = pokemonState[index]
+
                     if (pokemon != null) {
                         PokemonListItem(
                             pokemonItem = pokemon,
-                            onCLick = { onClick(pokemon.name) }
-
+                            sharedTransitionScope = sharedTransitionScope,
+                            animatedVisibilityScope = animatedVisibilityScope,
+                            onCLick = {
+                                onClick(pokemon)
+                            }
                         )
                     }
-
-
                 }
             }
         }
     }
-
 }

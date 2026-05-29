@@ -1,6 +1,11 @@
 package com.emerson.pokeapp.ui.screens.pokemonList.composables
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -35,8 +40,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.tween
 import coil.compose.SubcomposeAsyncImage
 import com.emerson.pokeapp.domain.model.PokemonItem
 import com.emerson.pokeapp.domain.model.TypeIcons
@@ -45,10 +48,14 @@ import com.emerson.pokeapp.ui.theme.montserratFamily
 import com.emerson.pokeapp.ui.utils.formatPokemonName
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun PokemonListItem(
     modifier: Modifier = Modifier,
     pokemonItem: PokemonItem,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    enableSharedTransition: Boolean = true,
     onCLick: () -> Unit = {}
 ) {
     val scope = rememberCoroutineScope()
@@ -85,16 +92,29 @@ fun PokemonListItem(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = modifier.padding(8.dp)
         ) {
-            SubcomposeAsyncImage(
-                model = pokemonItem.ImageUrl,
-                contentDescription = "Pokemon Image",
-                loading = { ImageLoading() },
-                error = { },
-                contentScale = ContentScale.Fit,
-                modifier = Modifier
-                    .size(100.dp)
-                    .padding(top = 8.dp)
-            )
+            with(sharedTransitionScope) {
+                val imageModifier = if (enableSharedTransition) {
+                    Modifier.sharedElement(
+                        sharedContentState = rememberSharedContentState(
+                            key = "pokemon-image-${pokemonItem.name}"
+                        ),
+                        animatedVisibilityScope = animatedVisibilityScope
+                    )
+                } else {
+                    Modifier
+                }
+
+                SubcomposeAsyncImage(
+                    model = pokemonItem.ImageUrl,
+                    contentDescription = "Pokemon Image",
+                    loading = { ImageLoading() },
+                    error = { },
+                    contentScale = ContentScale.Fit,
+                    modifier = imageModifier
+                        .size(100.dp)
+                        .padding(top = 8.dp)
+                )
+            }
 
             Box(
                 contentAlignment = Alignment.Center,
@@ -128,6 +148,7 @@ fun PokemonListItem(
             ) {
                 pokemonItem.pokemonTypes.forEach { type ->
                     val iconId = TypeIcons[type.lowercase()]
+
                     if (iconId != null) {
                         Box(
                             contentAlignment = Alignment.Center
@@ -148,17 +169,23 @@ fun PokemonListItem(
     }
 }
 
-@Preview(showBackground = true)
-@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
-@Composable
-fun PokemonListItemPreview() {
-    PokeAppTheme {
-        PokemonListItem(
-            pokemonItem = PokemonItem(
-                name = "charizard-mega-x",
-                id = 6,
-                pokemonTypes = listOf("Fire", "Dragon")
-            )
-        )
-    }
-}
+/*
+   Este preview queda comentado porque ahora PokemonListItem necesita
+   SharedTransitionScope y AnimatedVisibilityScope desde el NavHost.
+*/
+//@Preview(showBackground = true)
+//@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
+//@Composable
+//fun PokemonListItemPreview() {
+//    PokeAppTheme {
+//        PokemonListItem(
+//            pokemonItem = PokemonItem(
+//                name = "charizard-mega-x",
+//                id = 6,
+//                pokemonTypes = listOf("Fire", "Dragon")
+//            ),
+//            sharedTransitionScope = TODO(),
+//            animatedVisibilityScope = TODO()
+//        )
+//    }
+//}

@@ -15,11 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,18 +29,25 @@ import com.emerson.pokeapp.ui.theme.montserratFamily
 fun StatsBar(
     statName: String,
     statValue: Int,
+    animateStats: Boolean,
     statMaxValue: Int = 255,
     modifier: Modifier = Modifier
 ) {
-    var animatedProgress by remember { mutableStateOf(0f) }
-    val progress = animateFloatAsState(
-        targetValue = animatedProgress,
-        animationSpec = tween(durationMillis = 1000, easing = LinearEasing)
+    val targetProgress = if (animateStats) {
+        statValue / statMaxValue.toFloat()
+    } else {
+        0f
+    }
+
+    val progress by animateFloatAsState(
+        targetValue = targetProgress,
+        animationSpec = tween(
+            durationMillis = 1000,
+            easing = LinearEasing
+        ),
+        label = "statBarAnimation"
     )
 
-    LaunchedEffect(statValue) {
-        animatedProgress = statValue / statMaxValue.toFloat()
-    }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier.fillMaxWidth()
@@ -59,9 +62,11 @@ fun StatsBar(
                 fontWeight = FontWeight.Bold,
                 fontFamily = montserratFamily,
                 fontSize = 14.sp,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier
+                    .weight(1f)
                     .padding(horizontal = 15.dp)
             )
+
             Text(
                 text = "$statValue",
                 color = Color.White,
@@ -70,39 +75,55 @@ fun StatsBar(
                 fontSize = 15.sp,
                 modifier = Modifier.padding(end = 20.dp)
             )
-
         }
+
         Spacer(modifier = modifier.height(4.dp))
+
         Box(
             modifier = modifier
                 .height(10.dp)
                 .fillMaxWidth(0.98f)
-                .background(Color.Gray.copy(alpha = 0.3f), shape = RoundedCornerShape(10.dp))
+                .background(
+                    color = Color.Gray.copy(alpha = 0.3f),
+                    shape = RoundedCornerShape(10.dp)
+                )
         ) {
             Box(
                 modifier = modifier
                     .fillMaxHeight()
-                    .fillMaxWidth(progress.value)
-                    .background(Color.White, shape = RoundedCornerShape(10.dp))
+                    .fillMaxWidth(progress)
+                    .background(
+                        color = Color.White,
+                        shape = RoundedCornerShape(10.dp)
+                    )
             )
         }
+
         Spacer(modifier = modifier.height(4.dp))
-
     }
-
 }
 
 @Composable
-fun Stats(pokemon: PokemonInfo){
+fun Stats(
+    pokemon: PokemonInfo,
+    animateStats: Boolean
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 15.dp, end = 15.dp, top = 20.dp, bottom = 20.dp)
-    ){
-        pokemon.stats.forEach{ stat ->
-            StatsBar(statName = stat.name ?:"Unknown", statValue = stat.baseStat)
+            .padding(
+                start = 15.dp,
+                end = 15.dp,
+                top = 20.dp,
+                bottom = 20.dp
+            )
+    ) {
+        pokemon.stats.forEach { stat ->
+            StatsBar(
+                statName = stat.name ?: "Unknown",
+                statValue = stat.baseStat,
+                animateStats = animateStats
+            )
         }
-
     }
-
 }
