@@ -37,6 +37,7 @@ import com.emerson.pokeapp.domain.model.PokemonItem
 import com.emerson.pokeapp.domain.model.PokemonTypeMap
 import com.emerson.pokeapp.ui.components.AppError
 import com.emerson.pokeapp.ui.components.AppLoading
+import com.emerson.pokeapp.ui.navigation.AppRoutes
 import com.emerson.pokeapp.ui.screens.pokemonList.composables.PokemonListItem
 import com.emerson.pokeapp.ui.utils.UiState
 import kotlinx.coroutines.delay
@@ -62,7 +63,7 @@ fun PokemonListByTypeScreen(
 
         coroutineScope.launch {
             delay(40)
-            navController.navigate("pokemonInfo/${pokemon.name}?pokemonId=${pokemon.id}")
+            navController.navigate(AppRoutes.pokemonInfo(pokemon.name, pokemon.id))
         }
     }
 

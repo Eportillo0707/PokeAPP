@@ -1,6 +1,5 @@
 package com.emerson.pokeapp.ui.screens.pokemonList.composables
 
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
@@ -37,16 +36,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
 import com.emerson.pokeapp.domain.model.PokemonItem
 import com.emerson.pokeapp.domain.model.TypeIcons
-import com.emerson.pokeapp.ui.theme.PokeAppTheme
 import com.emerson.pokeapp.ui.theme.montserratFamily
 import com.emerson.pokeapp.ui.utils.formatPokemonName
 import kotlinx.coroutines.launch
+
+private val CardWidth = 150.dp
+private val PokemonImageSize = 100.dp
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -58,8 +58,8 @@ fun PokemonListItem(
     enableSharedTransition: Boolean = true,
     onCLick: () -> Unit = {}
 ) {
-    val scope = rememberCoroutineScope()
     val scale = remember { Animatable(1f) }
+    val coroutineScope = rememberCoroutineScope()
     val interactionSource = remember { MutableInteractionSource() }
 
     Card(
@@ -68,14 +68,14 @@ fun PokemonListItem(
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         border = CardDefaults.outlinedCardBorder(),
         modifier = Modifier
-            .width(150.dp)
+            .width(CardWidth)
             .padding(8.dp)
             .scale(scale.value)
             .clickable(
                 interactionSource = interactionSource,
                 indication = null
             ) {
-                scope.launch {
+                coroutineScope.launch {
                     scale.animateTo(
                         targetValue = 0.94f,
                         animationSpec = tween(durationMillis = 80)
@@ -92,100 +92,103 @@ fun PokemonListItem(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = modifier.padding(8.dp)
         ) {
-            with(sharedTransitionScope) {
-                val imageModifier = if (enableSharedTransition) {
-                    Modifier.sharedElement(
-                        sharedContentState = rememberSharedContentState(
-                            key = "pokemon-image-${pokemonItem.name}"
-                        ),
-                        animatedVisibilityScope = animatedVisibilityScope
-                    )
-                } else {
-                    Modifier
-                }
+            PokemonCardImage(
+                pokemonItem = pokemonItem,
+                sharedTransitionScope = sharedTransitionScope,
+                animatedVisibilityScope = animatedVisibilityScope,
+                enableSharedTransition = enableSharedTransition
+            )
 
-                SubcomposeAsyncImage(
-                    model = pokemonItem.ImageUrl,
-                    contentDescription = "Pokemon Image",
-                    loading = { ImageLoading() },
-                    error = { },
-                    contentScale = ContentScale.Fit,
-                    modifier = imageModifier
-                        .size(100.dp)
-                        .padding(top = 8.dp)
-                )
-            }
+            PokemonCardName(name = pokemonItem.name)
 
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = modifier.fillMaxWidth()
-            ) {
-                BasicText(
-                    text = formatPokemonName(pokemonItem.name),
-                    style = TextStyle(
-                        color = Color.White,
-                        fontFamily = montserratFamily,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center
-                    ),
-                    maxLines = 1,
-                    softWrap = false,
-                    autoSize = TextAutoSize.StepBased(
-                        minFontSize = 10.sp,
-                        maxFontSize = 20.sp
-                    ),
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
+            PokemonCardTypes(types = pokemonItem.pokemonTypes)
 
-            Row(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .height(IntrinsicSize.Min)
-                    .padding(top = 10.dp, bottom = 10.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                pokemonItem.pokemonTypes.forEach { type ->
-                    val iconId = TypeIcons[type.lowercase()]
-
-                    if (iconId != null) {
-                        Box(
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Image(
-                                painter = painterResource(id = iconId),
-                                contentDescription = null,
-                                contentScale = ContentScale.Fit,
-                                modifier = modifier.width(75.dp)
-                            )
-                        }
-                    }
-                }
-            }
-
-            Spacer(modifier = modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(4.dp))
         }
     }
 }
 
-/*
-   Este preview queda comentado porque ahora PokemonListItem necesita
-   SharedTransitionScope y AnimatedVisibilityScope desde el NavHost.
-*/
-//@Preview(showBackground = true)
-//@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
-//@Composable
-//fun PokemonListItemPreview() {
-//    PokeAppTheme {
-//        PokemonListItem(
-//            pokemonItem = PokemonItem(
-//                name = "charizard-mega-x",
-//                id = 6,
-//                pokemonTypes = listOf("Fire", "Dragon")
-//            ),
-//            sharedTransitionScope = TODO(),
-//            animatedVisibilityScope = TODO()
-//        )
-//    }
-//}
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Composable
+private fun PokemonCardImage(
+    pokemonItem: PokemonItem,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    enableSharedTransition: Boolean
+) {
+    with(sharedTransitionScope) {
+        val imageModifier = if (enableSharedTransition) {
+            Modifier.sharedElement(
+                sharedContentState = rememberSharedContentState(
+                    key = "pokemon-image-${pokemonItem.name}"
+                ),
+                animatedVisibilityScope = animatedVisibilityScope
+            )
+        } else {
+            Modifier
+        }
+
+        SubcomposeAsyncImage(
+            model = pokemonItem.ImageUrl,
+            contentDescription = "Pokemon Image",
+            loading = { ImageLoading() },
+            error = { },
+            contentScale = ContentScale.Fit,
+            modifier = imageModifier
+                .size(PokemonImageSize)
+                .padding(top = 8.dp)
+        )
+    }
+}
+
+@Composable
+private fun PokemonCardName(name: String) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        BasicText(
+            text = formatPokemonName(name),
+            style = TextStyle(
+                color = Color.White,
+                fontFamily = montserratFamily,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
+            ),
+            maxLines = 1,
+            softWrap = false,
+            autoSize = TextAutoSize.StepBased(
+                minFontSize = 10.sp,
+                maxFontSize = 20.sp
+            ),
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
+}
+
+@Composable
+private fun PokemonCardTypes(types: List<String>) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(IntrinsicSize.Min)
+            .padding(top = 10.dp, bottom = 10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        types.forEach { type ->
+            val iconId = TypeIcons[type.lowercase()]
+
+            if (iconId != null) {
+                Box(contentAlignment = Alignment.Center) {
+                    Image(
+                        painter = painterResource(id = iconId),
+                        contentDescription = type,
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier.width(75.dp)
+                    )
+                }
+            }
+        }
+    }
+}

@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.emerson.pokeapp.domain.model.PokemonItem
+import com.emerson.pokeapp.ui.navigation.AppRoutes
 import com.emerson.pokeapp.ui.screens.pokemonList.composables.PokemonListItem
 import com.emerson.pokeapp.ui.theme.montserratFamily
 import kotlinx.coroutines.delay
@@ -62,7 +63,7 @@ fun FavoritesPokemonScreen(
             delay(40)
 
             navController.navigate(
-                "pokemonInfo/${pokemon.name}?pokemonId=${pokemon.id}"
+                AppRoutes.pokemonInfo(pokemon.name, pokemon.id)
             )
         }
     }

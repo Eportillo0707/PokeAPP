@@ -1,6 +1,3 @@
-# Git
-.git/
-
 # Gradle
 .gradle/
 build/
@@ -14,10 +11,10 @@ build/
 *.ipr
 out/
 
-# Local config
+# Local configuration
 local.properties
 
-# Android generated / build outputs
+# Android generated files
 captures/
 .externalNativeBuild/
 .cxx/
@@ -26,14 +23,8 @@ captures/
 *.aab
 *.dex
 
-# App build outputs
+# Generated source / build outputs
 app/build/
-app/build/generated/
-app/build/intermediates/
-app/build/outputs/
-app/build/tmp/
-
-# Generated sources
 **/build/generated/
 **/generated/
 **/ksp/
@@ -46,9 +37,6 @@ app/build/generated/source/apollo/
 app/build/generated/source/apolloTest/
 build/generated/checks/apollo/
 
-# Room generated schemas
-schemas/
-
 # Signing / keystore files
 *.jks
 *.keystore
@@ -59,7 +47,7 @@ keystore.properties
 signing.properties
 
 # Google / Firebase
-# Si quieres subir google-services.json al repo, deja esta línea comentada.
+# Descomenta si no quieres subir Firebase al repo
 # google-services.json
 
 # Logs

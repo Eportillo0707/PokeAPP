@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 internal interface PokemonDao {
-    @Query("SELECT * FROM favorite_pokemon")
+    @Query("SELECT * FROM favorite_pokemon ORDER BY id ASC")
     fun getAllFavorites(): Flow<List<FavoriteEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

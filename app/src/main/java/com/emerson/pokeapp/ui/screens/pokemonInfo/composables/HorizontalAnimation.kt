@@ -3,44 +3,30 @@ package com.emerson.pokeapp.ui.screens.pokemonInfo.composables
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.BarChart
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.emerson.pokeapp.domain.model.PokemonInfo
 import com.emerson.pokeapp.domain.model.TypeEffectiveness
 import kotlinx.coroutines.launch
+
+private const val INFO_PAGE = 0
+private const val STATS_PAGE = 1
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -51,87 +37,20 @@ fun HorizontalAnimation(
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope
 ) {
-    val pagerState = rememberPagerState(initialPage = 0, pageCount = { 2 })
+    val pagerState = rememberPagerState(initialPage = INFO_PAGE, pageCount = { 2 })
     val coroutineScope = rememberCoroutineScope()
-
-    val indicatorWidth = 50.dp
-    val indicatorOffset = remember { Animatable(0f) }
-
-    LaunchedEffect(pagerState.currentPage) {
-        val targetOffset = when (pagerState.currentPage) {
-            0 -> 0f
-            1 -> 450f
-            else -> 0f
-        }
-
-        indicatorOffset.animateTo(
-            targetValue = targetOffset,
-            animationSpec = tween(durationMillis = 150)
-        )
-    }
 
     Spacer(modifier = Modifier.height(15.dp))
 
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 90.dp)
-        ) {
-            IconButton(
-                onClick = {
-                    coroutineScope.launch {
-                        pagerState.scrollToPage(0)
-                    }
-                }
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Info,
-                    contentDescription = "Info",
-                    tint = if (pagerState.currentPage == 0) Color.White else Color.LightGray,
-                    modifier = Modifier.size(40.dp)
-                )
-            }
-
-            IconButton(
-                onClick = {
-                    coroutineScope.launch {
-                        pagerState.scrollToPage(1)
-                    }
-                }
-            ) {
-                Icon(
-                    imageVector = Icons.Default.BarChart,
-                    contentDescription = "Stats",
-                    tint = if (pagerState.currentPage == 1) Color.White else Color.Gray,
-                    modifier = Modifier.size(40.dp)
-                )
-            }
+    PokemonInfoTabs(
+        selectedPage = pagerState.currentPage,
+        onInfoClick = {
+            coroutineScope.launch { pagerState.scrollToPage(INFO_PAGE) }
+        },
+        onStatsClick = {
+            coroutineScope.launch { pagerState.scrollToPage(STATS_PAGE) }
         }
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(3.dp)
-                .padding(horizontal = 85.dp)
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(width = indicatorWidth, height = 3.dp)
-                    .graphicsLayer {
-                        translationX = indicatorOffset.value
-                    }
-                    .background(
-                        color = Color.White,
-                        shape = RoundedCornerShape(50)
-                    )
-            )
-        }
-    }
+    )
 
     HorizontalPager(
         state = pagerState,
@@ -140,53 +59,90 @@ fun HorizontalAnimation(
             .padding(top = 10.dp)
             .height(760.dp)
     ) { page ->
-
-        Card(
-            shape = RoundedCornerShape(20.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF202339)),
-            elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
-            border = CardDefaults.outlinedCardBorder(),
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 10.dp, vertical = 10.dp)
-        ) {
+        InfoPageCard {
             when (page) {
-                0 -> {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .verticalScroll(rememberScrollState())
-                            .padding(bottom = 16.dp)
-                    ) {
-                        PokemonSpecs(pokemon = pokemon)
-
-                        Spacer(modifier = Modifier.height(10.dp))
-
-                        EvolutionChain(
-                            pokemon = pokemon,
-                            navController = navController,
-                            sharedTransitionScope = sharedTransitionScope,
-                            animatedVisibilityScope = animatedVisibilityScope
-                        )
-                    }
+                INFO_PAGE -> {
+                    PokemonDetailsPage(
+                        pokemon = pokemon,
+                        navController = navController,
+                        sharedTransitionScope = sharedTransitionScope,
+                        animatedVisibilityScope = animatedVisibilityScope
+                    )
                 }
 
-                1 -> {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .verticalScroll(rememberScrollState())
-                            .padding(bottom = 16.dp)
-                    ) {
-                        Stats(
-                            pokemon = pokemon,
-                            animateStats = pagerState.currentPage == 1
-                        )
-
-                        TypesDetails(resistances = resistances)
-                    }
+                STATS_PAGE -> {
+                    PokemonStatsPage(
+                        pokemon = pokemon,
+                        resistances = resistances,
+                        animateStats = pagerState.currentPage == STATS_PAGE
+                    )
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun InfoPageCard(
+    content: @Composable () -> Unit
+) {
+    Card(
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF202339)),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+        border = CardDefaults.outlinedCardBorder(),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 10.dp, vertical = 10.dp)
+    ) {
+        content()
+    }
+}
+
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Composable
+private fun PokemonDetailsPage(
+    pokemon: PokemonInfo,
+    navController: NavController,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(bottom = 16.dp)
+    ) {
+        PokemonSpecs(pokemon = pokemon)
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        EvolutionChain(
+            pokemon = pokemon,
+            navController = navController,
+            sharedTransitionScope = sharedTransitionScope,
+            animatedVisibilityScope = animatedVisibilityScope
+        )
+    }
+}
+
+@Composable
+private fun PokemonStatsPage(
+    pokemon: PokemonInfo,
+    resistances: TypeEffectiveness,
+    animateStats: Boolean
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(bottom = 16.dp)
+    ) {
+        Stats(
+            pokemon = pokemon,
+            animateStats = animateStats
+        )
+
+        TypesDetails(resistances = resistances)
     }
 }

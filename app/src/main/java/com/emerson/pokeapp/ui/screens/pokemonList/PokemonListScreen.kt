@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.paging.PagingData
 import com.emerson.pokeapp.domain.model.PokemonItem
+import com.emerson.pokeapp.ui.navigation.AppRoutes
 import com.emerson.pokeapp.ui.screens.pokemonList.composables.HeaderButtons
 import com.emerson.pokeapp.ui.screens.pokemonList.composables.ListItem
 import kotlinx.coroutines.flow.StateFlow
@@ -45,9 +46,9 @@ fun PokemonListScreen(
 ) {
     ScreenContent(
         pokemonList = viewModel.pokemonItem,
-        onSearchClick = { navController.navigate("searchPokemon") },
+        onSearchClick = { navController.navigate(AppRoutes.SearchPokemon) },
         onPokemonClick = { pokemon ->
-            navController.navigate("pokemonInfo/${pokemon.name}?pokemonId=${pokemon.id}")
+            navController.navigate(AppRoutes.pokemonInfo(pokemon.name, pokemon.id))
         },
         sharedTransitionScope = sharedTransitionScope,
         animatedVisibilityScope = animatedVisibilityScope
