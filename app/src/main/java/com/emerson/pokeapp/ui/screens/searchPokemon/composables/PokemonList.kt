@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -37,7 +38,8 @@ fun ColumnScope.PokemonList(
     onClick: (PokemonItem) -> Unit,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
-    selectedPokemonNameForTransition: String?
+    selectedPokemonNameForTransition: String?,
+    gridState: LazyGridState
 ) {
     val state by searchResultState.collectAsState()
 
@@ -59,6 +61,7 @@ fun ColumnScope.PokemonList(
             val pagingItems = result.data.collectAsLazyPagingItems()
 
             LazyVerticalGrid(
+                state = gridState,
                 columns = GridCells.Fixed(2),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -67,7 +70,13 @@ fun ColumnScope.PokemonList(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(pagingItems.itemCount) { index ->
+                items(
+                    count = pagingItems.itemCount,
+                    key = { index ->
+                        val pokemon = pagingItems.peek(index)
+                        pokemon?.name ?: "search-placeholder-$index"
+                    }
+                ) { index ->
                     val pokemon = pagingItems[index]
 
                     if (pokemon != null) {

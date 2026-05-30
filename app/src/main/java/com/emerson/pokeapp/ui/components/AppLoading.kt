@@ -1,54 +1,122 @@
 package com.emerson.pokeapp.ui.components
 
-import android.content.res.Configuration
-import androidx.compose.foundation.background
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
-import com.emerson.pokeapp.ui.theme.PokeAppTheme
-import com.emerson.pokeapp.ui.theme.montserratFamily
-import kotlinx.coroutines.delay
 
 @Composable
 fun AppLoading(
-    modifier: Modifier = Modifier,
-    backgroundColor: Color = Color(0xFF121422),
-    indicatorColor: Color = Color.White
+    modifier: Modifier = Modifier
 ) {
     Box(
         contentAlignment = Alignment.Center,
-        modifier = modifier
-            .fillMaxSize()
-            .background(backgroundColor)
-
+        modifier = modifier.fillMaxSize()
     ) {
-        CircularProgressIndicator(
-            color = indicatorColor,
-            strokeWidth = 5.dp
-        )
+        PokeballLoading()
     }
 }
 
-@Preview(showBackground = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-private fun LoadingPreview() {
-    PokeAppTheme {
-        AppLoading()
+private fun PokeballLoading(
+    modifier: Modifier = Modifier
+) {
+    val infiniteTransition = rememberInfiniteTransition(
+        label = "pokeballLoadingTransition"
+    )
+
+    val rotation by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 360f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(
+                durationMillis = 900,
+                easing = LinearEasing
+            ),
+            repeatMode = RepeatMode.Restart
+        ),
+        label = "pokeballRotation"
+    )
+
+    Canvas(
+        modifier = modifier
+            .size(62.dp)
+            .rotate(rotation)
+    ) {
+        val canvasWidth = size.width
+        val canvasHeight = size.height
+        val strokeWidth = canvasWidth * 0.07f
+        val center = Offset(canvasWidth / 2f, canvasHeight / 2f)
+        val radius = canvasWidth / 2f
+
+        drawArc(
+            color = Color(0xFFE53935),
+            startAngle = 180f,
+            sweepAngle = 180f,
+            useCenter = true,
+            topLeft = Offset.Zero,
+            size = Size(canvasWidth, canvasHeight)
+        )
+
+        drawArc(
+            color = Color.White,
+            startAngle = 0f,
+            sweepAngle = 180f,
+            useCenter = true,
+            topLeft = Offset.Zero,
+            size = Size(canvasWidth, canvasHeight)
+        )
+
+        drawCircle(
+            color = Color(0xFF121422),
+            radius = radius,
+            center = center,
+            style = Stroke(width = strokeWidth)
+        )
+
+        drawLine(
+            color = Color(0xFF121422),
+            start = Offset(0f, center.y),
+            end = Offset(canvasWidth, center.y),
+            strokeWidth = strokeWidth,
+            cap = StrokeCap.Round
+        )
+
+        drawCircle(
+            color = Color(0xFF121422),
+            radius = canvasWidth * 0.18f,
+            center = center
+        )
+
+        drawCircle(
+            color = Color.White,
+            radius = canvasWidth * 0.105f,
+            center = center
+        )
+
+        drawCircle(
+            color = Color(0xFF121422),
+            radius = canvasWidth * 0.105f,
+            center = center,
+            style = Stroke(width = strokeWidth * 0.55f)
+        )
     }
 }

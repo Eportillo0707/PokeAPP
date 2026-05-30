@@ -8,8 +8,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,7 +43,10 @@ fun SearchPokemonScreen(
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope
 ) {
+    val query by viewModel.searchQuery.collectAsState()
+
     SearchPokemonContent(
+        query = query,
         navController = navController,
         onQueryChanged = viewModel::onSearchQueryChanged,
         searchResultState = viewModel.searchResultState,
@@ -53,6 +58,7 @@ fun SearchPokemonScreen(
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun SearchPokemonContent(
+    query: String,
     onQueryChanged: (String) -> Unit,
     searchResultState: StateFlow<UiState<Flow<PagingData<PokemonItem>>>>,
     navController: NavController,
@@ -61,8 +67,8 @@ private fun SearchPokemonContent(
 ) {
     val focusRequester = remember { FocusRequester() }
     val coroutineScope = rememberCoroutineScope()
+    val gridState = rememberLazyGridState()
 
-    var query by remember { mutableStateOf("") }
     var selectedPokemonNameForTransition by rememberSaveable {
         mutableStateOf<String?>(null)
     }
@@ -71,8 +77,11 @@ private fun SearchPokemonContent(
         selectedPokemonNameForTransition = pokemon.name
 
         coroutineScope.launch {
-            delay(40)
-            navController.navigate(AppRoutes.pokemonInfo(pokemon.name, pokemon.id))
+            delay(60)
+
+            navController.navigate(
+                "pokemonInfo/${pokemon.name}?pokemonId=${pokemon.id}"
+            )
         }
     }
 
@@ -91,7 +100,6 @@ private fun SearchPokemonContent(
             text = query,
             focusRequester = focusRequester,
             onTextChange = { value ->
-                query = value
                 onQueryChanged(value)
             },
             onTypeSelected = { type ->
@@ -109,7 +117,8 @@ private fun SearchPokemonContent(
             },
             sharedTransitionScope = sharedTransitionScope,
             animatedVisibilityScope = animatedVisibilityScope,
-            selectedPokemonNameForTransition = selectedPokemonNameForTransition
+            selectedPokemonNameForTransition = selectedPokemonNameForTransition,
+            gridState = gridState
         )
     }
 }

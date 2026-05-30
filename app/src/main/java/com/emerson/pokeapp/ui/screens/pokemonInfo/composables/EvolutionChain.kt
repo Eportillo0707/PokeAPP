@@ -3,7 +3,11 @@ package com.emerson.pokeapp.ui.screens.pokemonInfo.composables
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -15,14 +19,17 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -216,4 +223,50 @@ private fun EvolutionArrow() {
         fontWeight = FontWeight.Bold,
         modifier = Modifier.padding(horizontal = 6.dp)
     )
+}
+
+@Composable
+private fun EvolutionItemEnterAnimation(
+    animationKey: Any?,
+    index: Int,
+    content: @Composable () -> Unit
+) {
+    val alpha = remember(animationKey) { Animatable(0f) }
+    val offsetY = remember(animationKey) { Animatable(18f) }
+
+    LaunchedEffect(animationKey) {
+        alpha.snapTo(0f)
+        offsetY.snapTo(18f)
+
+        delay(index * 90L)
+
+        launch {
+            alpha.animateTo(
+                targetValue = 1f,
+                animationSpec = tween(
+                    durationMillis = 260,
+                    easing = FastOutSlowInEasing
+                )
+            )
+        }
+
+        launch {
+            offsetY.animateTo(
+                targetValue = 0f,
+                animationSpec = tween(
+                    durationMillis = 260,
+                    easing = FastOutSlowInEasing
+                )
+            )
+        }
+    }
+
+    Box(
+        modifier = Modifier.graphicsLayer {
+            this.alpha = alpha.value
+            translationY = offsetY.value
+        }
+    ) {
+        content()
+    }
 }

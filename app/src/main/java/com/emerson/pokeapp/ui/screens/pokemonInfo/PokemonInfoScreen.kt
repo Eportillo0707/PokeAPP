@@ -6,7 +6,9 @@ import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
@@ -15,6 +17,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.emerson.pokeapp.domain.model.PokemonInfo
 import com.emerson.pokeapp.domain.model.PokemonItem
@@ -24,6 +27,7 @@ import com.emerson.pokeapp.ui.components.AppError
 import com.emerson.pokeapp.ui.components.AppLoading
 import com.emerson.pokeapp.ui.screens.pokemonInfo.composables.HorizontalAnimation
 import com.emerson.pokeapp.ui.screens.pokemonInfo.composables.PokemonImage
+import com.emerson.pokeapp.ui.screens.pokemonInfo.composables.PokemonInfoEnterAnimation
 import com.emerson.pokeapp.ui.screens.pokemonInfo.composables.PokemonInfoHeader
 import com.emerson.pokeapp.ui.screens.pokemonInfo.composables.PokemonInfoTopBar
 import com.emerson.pokeapp.ui.screens.pokemonInfo.composables.PokemonTypeBadgesRow
@@ -168,13 +172,22 @@ private fun PokemonInfoContent(
                 }
 
                 item {
-                    HorizontalAnimation(
-                        resistances = resistances,
-                        pokemon = pokemon,
-                        navController = navController,
-                        sharedTransitionScope = sharedTransitionScope,
-                        animatedVisibilityScope = animatedVisibilityScope
-                    )
+                    PokemonInfoEnterAnimation(
+                    animationKey = pokemon.id,
+                    delayMillis = 220
+                ) {
+                    Column {
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        HorizontalAnimation(
+                            resistances = resistances,
+                            pokemon = pokemon,
+                            navController = navController,
+                            sharedTransitionScope = sharedTransitionScope,
+                            animatedVisibilityScope = animatedVisibilityScope
+                        )
+                    }
+                }
                 }
             }
         }
